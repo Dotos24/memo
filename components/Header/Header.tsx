@@ -88,7 +88,7 @@ const SearchResult = ({ isVisible }: { isVisible: boolean }) => {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 10 }}
           transition={{ duration: 0.2 }}
-          className="absolute top-full left-0 right-0 border rounded-2xl mt-2 p-5 divide-y divide-gray-100"
+          className="absolute bg-white top-full left-0 right-0 border rounded-2xl mt-2 p-5 divide-y divide-gray-100"
         >
           <div className="flex items-center justify-between pb-4">
             <h3 className="font-medium text-gray-400">Знайдено товарів: 2</h3>
@@ -215,11 +215,11 @@ const Header = () => {
                         <ul className="grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
                           <li className="row-span-3">
                             <NavigationMenuLink asChild>
-                              <a className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-gray-50 to-gray-100 p-6 no-underline outline-none">
-                                <div className="mb-2 text-lg font-medium">
+                              <a className="flex h-full w-full select-none flex-col justify-end rounded-md bg-center bg-cover bg-[url('/test.png')] p-6 no-underline outline-none">
+                                <div  className="mb-2 text-white font-bold">
                                   Подарункові набори
                                 </div>
-                                <p className="text-sm leading-tight text-black/80">
+                                <p className="text-sm text-white/70 leading-tight">
                                   Найкращі ігри для особливих моментів та незабутніх вражень
                                 </p>
                               </a>

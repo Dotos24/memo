@@ -53,7 +53,7 @@ const Content = () => {
   }, [emblaApi, onSelect]);
 
   return (
-    <div className="container px-4 py-[50px]">
+    <div className="container px-4 py-[45px]">
       {/* Изменяем пропорции сетки с помощью grid-cols и col-span */}
       <div className="grid grid-cols-11 gap-5">
         {/* Left side - теперь занимает 8 колонок из 12 */}
@@ -140,6 +140,7 @@ const Content = () => {
 
         </div>
       </div>
+      
     </div>
   );
 };
