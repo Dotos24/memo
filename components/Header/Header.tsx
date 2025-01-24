@@ -17,6 +17,7 @@ import {
 import { cn } from "@/lib/utils"
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from "framer-motion"
+import { ThemeToggle } from "@/components/ui/theme-toggle"
 
 interface SearchItem {
   id: number;
@@ -114,7 +115,7 @@ const SearchResult = ({ isVisible }: { isVisible: boolean }) => {
                 <div className="flex-1 flex flex-col">
                   <Link 
                     href={`/products/${item.slug}`} 
-                    className="font-medium text-lg mb-2 hover:text-gray-600 transition-colors line-clamp-1"
+                    className="font-medium text-lg mb-2 hover:text-black/80 transition-colors line-clamp-1"
                   >
                     {item.title}
                   </Link>
@@ -179,7 +180,7 @@ const Header = () => {
   ]
 
   return (
-    <header className="border-b  sticky top-0 z-50">
+    <header className="border-b sticky top-0 z-50 bg-background">
       <div className="container px-4">
         {/* Mobile Search Bar */}
         <div className="block lg:hidden py-3 border-b">
@@ -187,7 +188,7 @@ const Header = () => {
             <input
               type="text"
               placeholder="Пошук ігор..."
-              className="w-full py-2.5 px-5 pr-12 bg-gray-50 rounded-full border-0 focus:ring-1 focus:ring-black text-sm"
+              className="w-full py-2.5 px-5 pr-12 bg-gray-50 focus:ring-1 focus:ring-black text-sm"
             />
             <FiSearch className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400" />
           </div>
@@ -209,7 +210,7 @@ const Header = () => {
                 <NavigationMenu>
                   <NavigationMenuList>
                     <NavigationMenuItem>
-                      <NavigationMenuTrigger className="text-[14px] font-medium text-gray-600">Усі ігри</NavigationMenuTrigger>
+                      <NavigationMenuTrigger className="text-[14px] font-medium text-black/80">Усі ігри</NavigationMenuTrigger>
                       <NavigationMenuContent>
                         <ul className="grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
                           <li className="row-span-3">
@@ -218,7 +219,7 @@ const Header = () => {
                                 <div className="mb-2 text-lg font-medium">
                                   Подарункові набори
                                 </div>
-                                <p className="text-sm leading-tight text-gray-600">
+                                <p className="text-sm leading-tight text-black/80">
                                   Найкращі ігри для особливих моментів та незабутніх вражень
                                 </p>
                               </a>
@@ -237,7 +238,7 @@ const Header = () => {
                       </NavigationMenuContent>
                     </NavigationMenuItem>
                     <NavigationMenuItem>
-                      <NavigationMenuTrigger className="text-[14px] font-medium text-gray-600">Для развития</NavigationMenuTrigger>
+                      <NavigationMenuTrigger className="text-[14px] font-medium text-black/80">Для развития</NavigationMenuTrigger>
                       <NavigationMenuContent>
                         <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
                           <ListItem href="/single" title="Для одного">
@@ -262,7 +263,7 @@ const Header = () => {
                           className={`px-3 py-2 rounded-md text-[14px] font-medium transition-colors
                             ${pathname === item.href 
                               ? 'bg-black text-white' 
-                              : 'text-gray-600 hover:bg-gray-100'
+                              : 'text-black/80 hover:bg-gray-100'
                             }
                           `}
                         >
@@ -284,7 +285,7 @@ const Header = () => {
                 value={searchValue}
                 onChange={(e) => setSearchValue(e.target.value)}
                 placeholder="Пошук ігор..."
-                className="w-full py-3 px-5 pr-12 bg-gray-50 rounded-full border-0 focus:ring-1 focus:ring-black transition-all"
+                className="w-full py-3 px-5 pr-12 bg-black/5 rounded-full border-1 border-black/10 focus:ring-1 focus:ring-black transition-all"
                 onFocus={() => setIsSearching(true)}
                 onBlur={() => {
                   setTimeout(() => {
@@ -304,18 +305,18 @@ const Header = () => {
 
           {/* Actions */}
           <div className="flex items-center gap-3">
-            <button className="hidden lg:flex items-center justify-center w-11 h-11 hover:bg-gray-50 rounded-full transition-all group">
+            <button className="hidden lg:flex items-center justify-center w-11 h-11 hover:bg-accent rounded-full transition-all group">
               <FiHeart 
                 size={22} 
-                className="text-gray-700 transition-colors group-hover:text-black" 
+                className="text-foreground/70 transition-colors group-hover:text-foreground" 
               />
             </button>
-            <button className="relative flex items-center justify-center w-11 h-11 hover:bg-gray-50 rounded-full transition-all group">
+            <button className="relative flex items-center justify-center w-11 h-11 hover:bg-accent rounded-full transition-all group">
               <FiShoppingCart 
                 size={22} 
-                className="text-gray-700 transition-colors group-hover:text-black" 
+                className="text-foreground/70 transition-colors group-hover:text-foreground" 
               />
-              <span className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-black text-white text-xs font-medium rounded-full flex items-center justify-center transition-transform group-hover:scale-110">
+              <span className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-primary text-primary-foreground text-xs font-medium rounded-full flex items-center justify-center transition-transform group-hover:scale-110">
                 3
               </span>
             </button>

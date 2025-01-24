@@ -18,8 +18,8 @@ body {
 
 @layer base {
   :root {
-    --background: 0 0% 92%;
-    --foreground: 0 0% 3.9%;
+    --background: 0 0% 97%;
+    --foreground: 0 0% 9%;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 3.9%;
     --popover: 0 0% 100%;
@@ -108,8 +108,16 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+  
+  /* Добавляем плавные переходы для всех элементов */
+  *, *::before, *::after {
+    transition: background-color 0.3s ease-in-out,
+                border-color 0.3s ease-in-out,
+                color 0.3s ease-in-out,
+                fill 0.3s ease-in-out,
+                stroke 0.3s ease-in-out;
+  }
 }
-
 
 .support-gradient {
   background: linear-gradient(90deg,#7cd5ae,#aeae88 28.02%,#5090b2 53.35%,#82a1c5 71.78%,#50808e);

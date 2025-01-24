@@ -6,6 +6,27 @@ import { FiChevronLeft, FiChevronRight, FiArrowRight } from 'react-icons/fi';
 import Image from 'next/image';
 import Link from 'next/link';
 
+const CAROUSEL_ITEMS = [
+  {
+    id: 1,
+    image: "/carousel/Frame-65-e1726148065935.webp",
+    title: "Між Нами 1.0",
+    description: "Ігри для особливих моментів",
+  },
+  {
+    id: 2,
+    image: "/carousel/Frame-98-e1726148037282.webp",
+    title: "Між Нами 2.0",
+    description: "Ігри для особливих моментів",
+  },
+  {
+    id: 3,
+    image: "/carousel/Frame-116-e1726148010329.webp",
+    title: "Між Нами 3.0",
+    description: "Ігри для особливих моментів",
+  },
+] as const;
+
 const Content = () => {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -32,18 +53,18 @@ const Content = () => {
   }, [emblaApi, onSelect]);
 
   return (
-    <div className="container px-4 py-8">
+    <div className="container px-4 py-[50px]">
       {/* Изменяем пропорции сетки с помощью grid-cols и col-span */}
-      <div className="grid grid-cols-12 gap-5">
+      <div className="grid grid-cols-11 gap-5">
         {/* Left side - теперь занимает 8 колонок из 12 */}
-        <div className="col-span-8 h-[700px] lg:h-[700px] rounded-[2rem] overflow-hidden relative bg-black/5 backdrop-blur-sm border border-white/10">
+        <div className="col-span-7 h-[700px] lg:h-[700px] rounded-[2rem] overflow-hidden relative bg-black/5 backdrop-blur-sm border border-white/10">
           <div ref={emblaRef} className="h-full">
             <div className="flex h-full">
-              {[1, 2, 3].map((_, index) => (
-                <div key={index} className="flex-[0_0_100%] min-w-0 relative h-full">
+              {CAROUSEL_ITEMS.map((item, index) => (
+                <div key={item.id} className="flex-[0_0_100%] min-w-0 relative h-full">
                   <Image
-                    src={`/carousel/Frame-${index === 0 ? '65' : index === 1 ? '98' : '116'}-e1726148065935.webp`}
-                    alt={`Carousel image ${index + 1}`}
+                    src={item.image}
+                    alt={item.title}
                     fill
                     className="object-cover transition-transform duration-500 hover:scale-105"
                     priority={index === 0}
@@ -51,10 +72,10 @@ const Content = () => {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                   <div className="absolute bottom-0 left-0 right-0 p-8">
                     <h3 className="text-white text-2xl font-bold mb-2">
-                      Між Нами {index + 1}.0
+                      {item.title}
                     </h3>
                     <p className="text-white/80">
-                      Ігри для особливих моментів
+                      {item.description}
                     </p>
                   </div>
                 </div>
