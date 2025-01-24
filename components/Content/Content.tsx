@@ -33,9 +33,10 @@ const Content = () => {
 
   return (
     <div className="container px-4 py-8">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        {/* Carousel */}
-        <div className="h-[700px] lg:h-[700px] rounded-[2rem] overflow-hidden relative bg-black/5 backdrop-blur-sm border border-white/10">
+      {/* Изменяем пропорции сетки с помощью grid-cols и col-span */}
+      <div className="grid grid-cols-12 gap-5">
+        {/* Left side - теперь занимает 8 колонок из 12 */}
+        <div className="col-span-8 h-[700px] lg:h-[700px] rounded-[2rem] overflow-hidden relative bg-black/5 backdrop-blur-sm border border-white/10">
           <div ref={emblaRef} className="h-full">
             <div className="flex h-full">
               {[1, 2, 3].map((_, index) => (
@@ -78,10 +79,9 @@ const Content = () => {
           </div>
         </div>
 
-        {/* Right Column */}
-        <div className="flex flex-col gap-5">
-          {/* Hero Section */}
-          <div className="h-[340px] rounded-[2rem] bg-gradient-to-br from-zinc-900 to-black p-7 text-white flex flex-col justify-between overflow-hidden relative group border border-white/10">
+        {/* Right side - занимает оставшиеся 4 колонки */}
+        <div className="col-span-4 flex flex-col gap-5">
+          <div className="h-full rounded-[2rem] bg-black p-7 text-white flex flex-col justify-between overflow-hidden relative group">
             <div className="relative z-10 max-w-lg">
               <div className="flex items-center gap-3 mb-6">
                 <span className="inline-flex items-center px-3 py-1 rounded-full bg-white/10 text-xs font-medium">
@@ -105,7 +105,7 @@ const Content = () => {
                 <FiArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
               </Link>
             </div>
-            <div className="absolute -top-10 -right-10 w-[450px] h-[450px] opacity-60 rotate-6 group-hover:rotate-3 transition-transform duration-700">
+            <div className="absolute -bottom-50 -right-[230px] w-[1024px] h-[1024px] opacity-60 rotate-6 group-hover:rotate-3 transition-transform duration-700">
               <Image
                 src="/між_нами_про_любов_2-1-1024x1024.webp"
                 alt="Hero image"
@@ -117,41 +117,6 @@ const Content = () => {
             </div>
           </div>
 
-          {/* Featured Section */}
-          <div className="h-[340px] rounded-[2rem] bg-gradient-to-br from-purple-50 to-white p-7 flex flex-col justify-between overflow-hidden relative group border border-black/5">
-            <div className="relative z-10">
-              <div className="flex items-center gap-3 mb-6">
-                <span className="inline-flex items-center px-3 py-1 rounded-full bg-purple-500/10 text-purple-600 text-xs font-medium">
-                  Спеціальна пропозиція
-                </span>
-              </div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-3">
-                Колекційна серія
-              </h2>
-              <p className="text-gray-600 text-sm max-w-sm">
-                Обмежений тираж особливої серії ігор із унікальним дизайном
-              </p>
-            </div>
-            <div className="relative z-10">
-              <Link 
-                href="/special-offer" 
-                className="inline-flex items-center gap-2 px-6 py-3 bg-black text-white rounded-xl font-medium hover:bg-gray-900 transition-all group-hover:gap-4"
-              >
-                Дізнатись більше
-                <FiArrowRight className="transition-transform group-hover:translate-x-1" />
-              </Link>
-            </div>
-            <div className="absolute top-1/2 right-0 -translate-y-1/2 w-48 h-48 rounded-full bg-purple-100 blur-3xl opacity-50" />
-            <div className="absolute -bottom-20 -right-20 w-80 h-80 rotate-12 group-hover:rotate-6 transition-transform duration-700">
-              <Image
-                src="/між_нами_про_любов_1-1-300x300.webp"
-                alt="Special offer"
-                fill
-                className="object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-l from-white via-white/50 to-transparent" />
-            </div>
-          </div>
         </div>
       </div>
     </div>

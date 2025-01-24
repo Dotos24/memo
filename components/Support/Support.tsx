@@ -22,7 +22,7 @@ const Support = () => {
   }, []);
 
   return (
-    <div className='bg-[#FDE5B9] py-5'>
+    <div className='support-gradient py-5'>
       <div className="container flex justify-between items-center px-4">
         <AnimatePresence mode="wait">
           <motion.p

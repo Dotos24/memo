@@ -7,7 +7,7 @@ export default function Home() {
       <>
         <Support/>
         <Header/>
-          <Content/>
+        <Content/>
       </>
   );
 }

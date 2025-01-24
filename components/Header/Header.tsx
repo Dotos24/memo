@@ -74,7 +74,7 @@ ListItem.displayName = "ListItem"
 
 const Loader = () => (
   <div className="absolute right-12 top-1/2 -translate-y-1/2">
-    <div className="w-4 h-4 border-2 border-gray-200 border-t-gray-600 rounded-full animate-spin"></div>
+    <div className="w-4 h-4 rounded-full animate-spin"></div>
   </div>
 )
 
@@ -87,7 +87,7 @@ const SearchResult = ({ isVisible }: { isVisible: boolean }) => {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 10 }}
           transition={{ duration: 0.2 }}
-          className="absolute top-full left-0 right-0 bg-white border rounded-2xl mt-2 p-5 divide-y divide-gray-100"
+          className="absolute top-full left-0 right-0 border rounded-2xl mt-2 p-5 divide-y divide-gray-100"
         >
           <div className="flex items-center justify-between pb-4">
             <h3 className="font-medium text-gray-400">Знайдено товарів: 2</h3>
@@ -179,7 +179,7 @@ const Header = () => {
   ]
 
   return (
-    <header className="border-b bg-white sticky top-0 z-50">
+    <header className="border-b  sticky top-0 z-50">
       <div className="container px-4">
         {/* Mobile Search Bar */}
         <div className="block lg:hidden py-3 border-b">
@@ -214,7 +214,7 @@ const Header = () => {
                         <ul className="grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
                           <li className="row-span-3">
                             <NavigationMenuLink asChild>
-                              <a className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-gray-50 to-gray-100 p-6 no-underline outline-none focus:shadow-md">
+                              <a className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-gray-50 to-gray-100 p-6 no-underline outline-none">
                                 <div className="mb-2 text-lg font-medium">
                                   Подарункові набори
                                 </div>
