@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useState, useEffect } from "react";
 import { FaTruck, FaHeart, FaUsers } from 'react-icons/fa';
 import { motion, AnimatePresence } from "framer-motion";
@@ -19,7 +18,7 @@ const Support = () => {
       setCurrentIndex((prev) => (prev + 1) % messages.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, []);
+  }, [messages.length]);
 
   return (
     <div className='bg-[#A7AA2E] py-5'>
