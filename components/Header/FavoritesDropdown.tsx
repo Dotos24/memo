@@ -14,7 +14,12 @@ interface FavoriteItem {
     reviews: number;
 }
 
-export default function FavoritesDropdown({ isOpen, onClose }) {
+interface FavoritesDropdownProps {
+    isOpen: boolean;
+    onClose: () => void;
+}
+
+export default function FavoritesDropdown({ isOpen, onClose }: FavoritesDropdownProps) {
     const favorites: FavoriteItem[] = [
         {
             id: 1,
@@ -42,7 +47,7 @@ export default function FavoritesDropdown({ isOpen, onClose }) {
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: 20 }}
-                        className="fixed top-0 right-0 h-full w-full max-w-md bg-gradient-to-b from-gray-50 to-white shadow-xl z-50"
+                        className="fixed top-0 right-0 h-full w-full max-w-md bg-gradient-to-b from-gray-50 to white shadow-xl z-50"
                     >
                         <div className="flex flex-col h-full">
                             {/* Header */}
