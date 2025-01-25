@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from 'react';
 import { FiX, FiStar, FiUpload } from 'react-icons/fi';
 
@@ -100,7 +102,7 @@ const ReviewModal = ({ isOpen, onClose, onSubmit }: ReviewModalProps) => {
                                 />
                             </label>
                             <span className="text-sm text-gray-500">
-                                {selectedFile ? selectedFile.name : &quot;Файл не выбран&quot;}
+                                {selectedFile ? selectedFile.name : "Файл не выбран"}
                             </span>
                         </div>
                     </div>
