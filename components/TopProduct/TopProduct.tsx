@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { FiShoppingCart, FiHeart, FiStar } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 
 type ProductCategory = 'hits' | 'new' | 'all';
 
@@ -52,6 +53,7 @@ const products: Product[] = [
 
 const TopProduct = () => {
     const [activeCategory, setActiveCategory] = useState<ProductCategory>('hits');
+    const router = useRouter();
 
     const categories = [
         { id: 'hits', label: 'Хіти Продажу' },
@@ -59,32 +61,40 @@ const TopProduct = () => {
         { id: 'all', label: 'Всі' },
     ];
 
-    const filteredProducts = products.filter(product => 
+    const filteredProducts = products.filter(product =>
         product.category.includes(activeCategory)
     );
 
     return (
-        <div className="container mx-auto px-4 py-12">
+        <div className="container mx-auto px-4 py-12 ">
             <div className="mb-8">
-                <div className="flex justify-center space-x-2 bg-gray-100 dark:bg-gray-800 p-1 rounded-xl inline-flex">
-                    {categories.map((category) => (
-                        <button
-                            key={category.id}
-                            onClick={() => setActiveCategory(category.id as ProductCategory)}
-                            className={`px-6 py-2 rounded-lg text-sm font-medium transition-all ${
-                                activeCategory === category.id
-                                    ? 'bg-white dark:bg-gray-700 shadow-sm'
-                                    : 'hover:bg-white/50 dark:hover:bg-gray-700/50'
-                            }`}
-                        >
-                            {category.label}
-                        </button>
-                    ))}
+                <div className='flex justify-between items-center'>
+                    <div className="flex justify-center space-x-2 bg-gray-100 dark:bg-gray-800 p-1 rounded-xl inline-flex">
+                        {categories.map((category) => (
+                            <button
+                                key={category.id}
+                                onClick={() => setActiveCategory(category.id as ProductCategory)}
+                                className={`px-6 py-2 rounded-lg text-sm font-medium transition-all ${activeCategory === category.id
+                                        ? 'bg-white dark:bg-gray-700 shadow-sm'
+                                        : 'hover:bg-white/50 dark:hover:bg-gray-700/50'
+                                    }`}
+                            >
+                                {category.label}
+                            </button>
+                        ))}
+                    </div>
+
+                    <button
+                        onClick={() => router.push('/catalog')}
+                        className="px-6 py-3 bg-black text-white rounded-xl hover:bg-gray-900 transition-all"
+                    >
+                        Перейти до всіх
+                    </button>   
                 </div>
             </div>
 
             <AnimatePresence mode="wait">
-                <motion.div 
+                <motion.div
                     className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -108,10 +118,10 @@ const TopProduct = () => {
                                     <FiHeart className="w-4 h-4" />
                                 </button>
                             </div>
-                            
+
                             <div className="space-y-1.5">
                                 <h3 className="font-medium text-base dark:text-white">{product.title}</h3>
-                                
+
                                 <div className="flex items-center gap-1.5">
                                     <div className="flex items-center">
                                         {[...Array(product.rating)].map((_, i) => (

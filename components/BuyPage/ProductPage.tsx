@@ -276,17 +276,114 @@ const ProductPage = () => {
                                 </p>
                             </div>
 
-                            {/* Features Grid */}
-                            <div className="grid grid-cols-2 gap-6">
-                                {productInfo.features.map((feature, i) => (
-                                    <div key={i} className="flex items-start gap-3 p-4 rounded-xl bg-gray-50 dark:bg-gray-800">
-                                        <feature.icon className="w-5 h-5 text-green-500 mt-1" />
-                                        <div>
-                                            <h3 className="font-medium dark:text-white">{feature.text}</h3>
+                            {/* How the Game Works Section */}
+                            <section className="py-12 bg-gray-50 dark:bg-gray-800/50">
+                                <div className="container mx-auto px-4">
+                                    <div className="grid md:grid-cols-2 gap-8 items-center">
+                                        <div className="relative aspect-video rounded-xl overflow-hidden">
+                                            <video
+                                                className="w-full h-full object-cover"
+                                                autoPlay
+                                                loop
+                                                muted
+                                                playsInline
+                                                src="https://memogames.com.ua/wp-content/uploads/2023/04/1680876346042789-1-1.mp4"
+                                                poster="https://memogames.pw/wp-content/uploads/2023/04/2P5A7742-scaled.jpg"
+                                            />
+                                        </div>
+                                        <div className="space-y-4">
+                                            <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                                                Як працює гра
+                                            </span>
+                                            <h3 className="text-2xl font-bold">
+                                                ОРГАНІЗУЙТЕ СІМЕЙНИЙ ВЕЧІР З КОРИСТЮ
+                                            </h3>
+                                            <p className="text-gray-600 dark:text-gray-300">
+                                                Правильні питання заохочують до самовираження, розвивають емоційний інтелект та надихають Вашу дитину досліджувати її переконання, мислення та ідеї. Використовуючи гру, Ви зможете передати цінні життєві уроки та допомогти малечі зрозуміти свої переконання та ідеї.
+                                            </p>
                                         </div>
                                     </div>
-                                ))}
-                            </div>
+                                </div>
+                            </section>
+
+                            {/* Real Benefits Section */}
+                            <section className="py-12">
+                                <div className="container mx-auto px-4">
+                                    <div className="text-center mb-12">
+                                        <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                                            реальні переваги
+                                        </span>
+                                        <h2 className="text-3xl font-bold mt-2">
+                                            ВИВЕДІТЬ стосунки з дітьми на новий рівень
+                                        </h2>
+                                        <p className="text-gray-600 dark:text-gray-400 mt-4">
+                                            Ось три причини, чому гра "Між Нами: Kids" може бути корисною для Вас
+                                        </p>
+                                    </div>
+
+                                    <div className="space-y-12">
+                                        {/* Benefit 1 */}
+                                        <div className="grid md:grid-cols-3 gap-8 items-center">
+                                            <div className="md:col-span-2">
+                                                <h4 className="text-xl font-bold mb-4">
+                                                    01. Спілкуйтеся та побудуйте довірливі відносини
+                                                </h4>
+                                                <p className="text-gray-600 dark:text-gray-300">
+                                                    <strong>Ми зібрали 150 глибоких питань, щоб викликати вдумливі, відкриті та веселі розмови з дітьми.</strong> Розділена на шість категорій, використовуйте ці підказки, щоб поговорити разом, передати цінні життєві уроки та зрозуміти, як Ваша дитина мислить.
+                                                </p>
+                                            </div>
+                                            <div className="relative aspect-square rounded-xl overflow-hidden">
+                                                <Image
+                                                    src="https://memogames.com.ua/wp-content/uploads/elementor/thumbs/2P5A7737-scaled-q5cwr64aygywkpq8x4cxg2wz5oj63kp7mfenkuesxs.jpg"
+                                                    alt="Спілкування з дітьми"
+                                                    fill
+                                                    className="object-cover"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        {/* Benefit 2 */}
+                                        <div className="grid md:grid-cols-3 gap-8 items-center">
+                                            <div className="relative aspect-square rounded-xl overflow-hidden md:order-1">
+                                                <Image
+                                                    src="https://memogames.com.ua/wp-content/uploads/elementor/thumbs/2P5A7769-scaled-q5cwr64aygywkpq8x4cxg2wz5oj63kp7mfenkuesxs.jpg"
+                                                    alt="Розвиток особистості"
+                                                    fill
+                                                    className="object-cover"
+                                                />
+                                            </div>
+                                            <div className="md:col-span-2">
+                                                <h4 className="text-xl font-bold mb-4">
+                                                    02. Надихайте на особистісний розвиток та впевненість з юності
+                                                </h4>
+                                                <p className="text-gray-600 dark:text-gray-300">
+                                                    Правильні питання заохочують до самовираження, розвивають емоційний інтелект та <strong>надихають Вашу дитину досліджувати</strong> її переконання, мислення та ідеї.
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        {/* Benefit 3 */}
+                                        <div className="grid md:grid-cols-3 gap-8 items-center">
+                                            <div className="md:col-span-2">
+                                                <h4 className="text-xl font-bold mb-4">
+                                                    03. Допомагайте дітям відчувати, що їх бачать та чують
+                                                </h4>
+                                                <p className="text-gray-600 dark:text-gray-300">
+                                                    Якщо ви хочете розширити можливості своєї дитини, щоб вона прагнула стати найкращою версією себе, одночасно зміцнюючи ваші спільні стосунки – <strong>настільна гра "Між Нами: Kids" є чудовим інструментом для використання.</strong>
+                                                </p>
+                                            </div>
+                                            <div className="relative aspect-square rounded-xl overflow-hidden">
+                                                <Image
+                                                    src="https://memogames.com.ua/wp-content/uploads/elementor/thumbs/2P5A7733-scaled-q5cwr64aygywkpq8x4cxg2wz5oj63kp7mfenkuesxs.jpg"
+                                                    alt="Підтримка дітей"
+                                                    fill
+                                                    className="object-cover"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
 
                             {/* Reviews Section */}
                             <Reviews showAll={false} />
