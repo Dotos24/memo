@@ -11,7 +11,12 @@ interface CartItem {
     image: string;
 }
 
-export default function CartDropdown({ isOpen, onClose }) {
+interface CartDropdownProps {
+    isOpen: boolean;
+    onClose: () => void;
+}
+
+export default function CartDropdown({ isOpen, onClose }: CartDropdownProps) {
     const cartItems: CartItem[] = [
         {
             id: 1,
