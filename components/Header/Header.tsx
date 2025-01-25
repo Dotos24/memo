@@ -17,7 +17,8 @@ import {
 import { cn } from "@/lib/utils"
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from "framer-motion"
-import { ThemeToggle } from "@/components/ui/theme-toggle"
+  import CartDropdown from './CartDropdown';
+import FavoritesDropdown from './FavoritesDropdown';
 
 interface SearchItem {
   id: number;
@@ -75,7 +76,7 @@ ListItem.displayName = "ListItem"
 
 const Loader = () => (
   <div className="absolute right-12 top-1/2 -translate-y-1/2">
-    <div className="w-4 h-4 rounded-full animate-spin"></div>
+    <div className="w-4 h-4 border-2 border-gray-200 border-t-gray-600 rounded-full animate-spin"></div>
   </div>
 )
 
@@ -88,7 +89,7 @@ const SearchResult = ({ isVisible }: { isVisible: boolean }) => {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 10 }}
           transition={{ duration: 0.2 }}
-          className="absolute bg-white top-full left-0 right-0 border rounded-2xl mt-2 p-5 divide-y divide-gray-100"
+          className="absolute top-full left-0 right-0 bg-white border rounded-2xl mt-2 p-5 divide-y divide-gray-100"
         >
           <div className="flex items-center justify-between pb-4">
             <h3 className="font-medium text-gray-400">Знайдено товарів: 2</h3>
@@ -115,7 +116,7 @@ const SearchResult = ({ isVisible }: { isVisible: boolean }) => {
                 <div className="flex-1 flex flex-col">
                   <Link 
                     href={`/products/${item.slug}`} 
-                    className="font-medium text-lg mb-2 hover:text-black/80 transition-colors line-clamp-1"
+                    className="font-medium text-lg mb-2 hover:text-gray-600 transition-colors line-clamp-1"
                   >
                     {item.title}
                   </Link>
@@ -156,6 +157,8 @@ const Header = () => {
   const [isSearching, setIsSearching] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [showResults, setShowResults] = useState(false)
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isFavoritesOpen, setIsFavoritesOpen] = useState(false);
 
   useEffect(() => {
     if (searchValue.length >= 1) {
@@ -180,7 +183,7 @@ const Header = () => {
   ]
 
   return (
-    <header className="border-b sticky top-0 z-50 bg-background">
+    <header className="border-b bg-white sticky top-0 z-50">
       <div className="container px-4">
         {/* Mobile Search Bar */}
         <div className="block lg:hidden py-3 border-b">
@@ -188,7 +191,7 @@ const Header = () => {
             <input
               type="text"
               placeholder="Пошук ігор..."
-              className="w-full py-2.5 px-5 pr-12 bg-gray-50 focus:ring-1 focus:ring-black text-sm"
+              className="w-full py-2.5 px-5 pr-12 bg-gray-50 rounded-full border-0 focus:ring-1 focus:ring-black text-sm"
             />
             <FiSearch className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400" />
           </div>
@@ -210,16 +213,16 @@ const Header = () => {
                 <NavigationMenu>
                   <NavigationMenuList>
                     <NavigationMenuItem>
-                      <NavigationMenuTrigger className="text-[14px] font-medium text-black/80">Усі ігри</NavigationMenuTrigger>
+                      <NavigationMenuTrigger className="text-[14px] font-medium text-gray-600">Усі ігри</NavigationMenuTrigger>
                       <NavigationMenuContent>
                         <ul className="grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
                           <li className="row-span-3">
                             <NavigationMenuLink asChild>
-                              <a className="flex h-full w-full select-none flex-col justify-end rounded-md bg-center bg-cover bg-[url('/test.png')] p-6 no-underline outline-none">
-                                <div  className="mb-2 text-white font-bold">
+                              <a className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-gray-50 to-gray-100 p-6 no-underline outline-none focus:shadow-md">
+                                <div className="mb-2 text-lg font-medium">
                                   Подарункові набори
                                 </div>
-                                <p className="text-sm text-white/70 leading-tight">
+                                <p className="text-sm leading-tight text-gray-600">
                                   Найкращі ігри для особливих моментів та незабутніх вражень
                                 </p>
                               </a>
@@ -238,7 +241,7 @@ const Header = () => {
                       </NavigationMenuContent>
                     </NavigationMenuItem>
                     <NavigationMenuItem>
-                      <NavigationMenuTrigger className="text-[14px] font-medium text-black/80">Для развития</NavigationMenuTrigger>
+                      <NavigationMenuTrigger className="text-[14px] font-medium text-gray-600">Для развития</NavigationMenuTrigger>
                       <NavigationMenuContent>
                         <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
                           <ListItem href="/single" title="Для одного">
@@ -263,7 +266,7 @@ const Header = () => {
                           className={`px-3 py-2 rounded-md text-[14px] font-medium transition-colors
                             ${pathname === item.href 
                               ? 'bg-black text-white' 
-                              : 'text-black/80 hover:bg-gray-100'
+                              : 'text-gray-600 hover:bg-gray-100'
                             }
                           `}
                         >
@@ -285,7 +288,7 @@ const Header = () => {
                 value={searchValue}
                 onChange={(e) => setSearchValue(e.target.value)}
                 placeholder="Пошук ігор..."
-                className="w-full py-3 px-5 pr-12 bg-black/5 rounded-full border-1 border-black/10 focus:ring-1 focus:ring-black transition-all"
+                className="w-full py-3 px-5 pr-12 bg-gray-50 rounded-full border-0 focus:ring-1 focus:ring-black transition-all"
                 onFocus={() => setIsSearching(true)}
                 onBlur={() => {
                   setTimeout(() => {
@@ -305,18 +308,24 @@ const Header = () => {
 
           {/* Actions */}
           <div className="flex items-center gap-3">
-            <button className="hidden lg:flex items-center justify-center w-11 h-11 hover:bg-accent rounded-full transition-all group">
+            <button 
+              className="hidden lg:flex items-center justify-center w-11 h-11 hover:bg-gray-50 rounded-full transition-all group"
+              onClick={() => setIsFavoritesOpen(true)}
+            >
               <FiHeart 
                 size={22} 
-                className="text-foreground/70 transition-colors group-hover:text-foreground" 
+                className="text-gray-700 transition-colors group-hover:text-black" 
               />
             </button>
-            <button className="relative flex items-center justify-center w-11 h-11 hover:bg-accent rounded-full transition-all group">
+            <button 
+              className="relative flex items-center justify-center w-11 h-11 hover:bg-gray-50 rounded-full transition-all group"
+              onClick={() => setIsCartOpen(true)}
+            >
               <FiShoppingCart 
                 size={22} 
-                className="text-foreground/70 transition-colors group-hover:text-foreground" 
+                className="text-gray-700 transition-colors group-hover:text-black" 
               />
-              <span className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-primary text-primary-foreground text-xs font-medium rounded-full flex items-center justify-center transition-transform group-hover:scale-110">
+              <span className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-black text-white text-xs font-medium rounded-full flex items-center justify-center transition-transform group-hover:scale-110">
                 3
               </span>
             </button>
@@ -326,6 +335,8 @@ const Header = () => {
           </div>
         </div>
       </div>
+      <CartDropdown isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+      <FavoritesDropdown isOpen={isFavoritesOpen} onClose={() => setIsFavoritesOpen(false)} />
     </header>
   )
 }
