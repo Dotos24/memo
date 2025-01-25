@@ -7,17 +7,17 @@ import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 const images = [
     {
         id: 1,
-        url: "/carousel/Frame-65-e1726148065935.webp",
+        url: "/carousel/1.png",
         alt: "Між нами фото 1"
     },
     {
         id: 2,
-        url: "/carousel/Frame-98-e1726148037282.webp",
+        url: "/carousel/2.png",
         alt: "Між нами фото 2"
     },
     {
         id: 3,
-        url: "/carousel/Frame-116-e1726148010329.webp",
+        url: "/carousel/3.png",
         alt: "Між нами фото 3"
     },
 ];
