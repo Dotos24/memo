@@ -44,7 +44,7 @@ const ReviewModal = ({ isOpen, onClose, onSubmit }: ReviewModalProps) => {
                 </div>
 
                 <p className="text-gray-500 text-sm mb-6">
-                    Ваша e-mail адреса не оприлюднюватиметься. Обов'язкові поля позначені *
+                    Ваша e-mail адреса не оприлюднюватиметься. Обов&apos;язкові поля позначені *
                 </p>
 
                 <form onSubmit={handleSubmit} className="space-y-6">

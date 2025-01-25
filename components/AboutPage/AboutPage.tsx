@@ -274,7 +274,7 @@ const AboutPage = () => {
                     >
                         <h2 className="text-4xl font-bold mb-8">Наші цінності</h2>
                         <p className="text-xl text-gray-300 mb-12">
-                            Ми віримо в силу людських зв'язків та прагнемо зробити світ трохи кращим 
+                            Ми віримо в силу людських зв&apos;язків та прагнемо зробити світ трохи кращим 
                             через meaningful conversations та якісне спілкування.
                         </p>
                         <motion.button
