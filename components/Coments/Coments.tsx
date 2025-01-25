@@ -128,7 +128,7 @@ export const Reviews = ({ showAll = false }: ReviewsProps) => {
                                 </button>
                             <button 
                                 onClick={() => setIsModalOpen(true)} 
-                                className="px-6 py-3 bg-black text-white rounded-xl hover:bg-gray-900 transition-all"
+                                className="px-6 py-3 bg-[#A7AA2E] text-white rounded-xl hover:bg-gray-900 transition-all"
                             >
                                 Написати відгук
                             </button>
