@@ -218,7 +218,7 @@ const Header = () => {
                         <ul className="grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
                           <li className="row-span-3">
                             <NavigationMenuLink asChild>
-                              <a className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-gray-50 to-gray-100 p-6 no-underline outline-none focus:shadow-md">
+                              <a className="flex h-full w-full select-none flex-col justify-end rounded-md bg-[#CC926A] p-6 no-underline outline-none focus:shadow-md">
                                 <div className="mb-2 text-lg font-medium">
                                   Подарункові набори
                                 </div>
