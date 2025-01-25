@@ -178,8 +178,55 @@ const Header = () => {
 
   const menuItems = [
     { title: 'Набори', href: '/sets' },
-    { title: 'Про нас', href: '/about' },
-    { title: 'FAQ', href: '/cooperation' },
+    { title: 'Про нас', href: '/about' },  
+    { title: 'FAQ', href: '/faq' },
+    { title: 'Співпраця', href: '/cooperation' }
+  ]
+
+  const gameCategories = [
+    {
+      title: 'Подарункові набори',
+      href: '/sets',
+      description: 'Найкращі ігри для особливих моментів та незабутніх вражень'
+    },
+    {
+      title: 'Друзям',
+      href: '/friends',
+      description: 'Настільні ігри для веселих посиденьок з друзями'
+    },
+    {
+      title: 'Парам',
+      href: '/couples',
+      description: 'Ігри для романтичного вечора вдвох'
+    },
+    {
+      title: 'Сім\'ї',
+      href: '/family',
+      description: 'Сімейні ігри для всіх віків'
+    }
+  ]
+
+  const developmentGames = [
+    {
+      title: 'Для одного',
+      href: '/single',
+      description: 'Індивідуальні розвиваючі ігри'
+    },
+    {
+      title: 'Розвиваючі',
+      href: '/development',
+      description: 'Ігри для розвитку пам\'яті та мислення'
+    },
+    {
+      title: 'Розмовні ігри',
+      href: '/conversation',
+      description: 'Ігри для покращення комунікації'
+    },
+    {
+      title: 'Логічні ігри',
+      href: '/logic',
+      description: 'Ігри для розвитку логічного мислення'
+    }
   ]
 
   return (
@@ -218,44 +265,41 @@ const Header = () => {
                         <ul className="grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
                           <li className="row-span-3">
                             <NavigationMenuLink asChild>
-                              <a className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-gray-50 to-gray-100 p-6 no-underline outline-none focus:shadow-md">
+                              <Link href="/sets" className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-gray-50 to-gray-100 p-6 no-underline outline-none focus:shadow-md">
                                 <div className="mb-2 text-lg font-medium">
-                                  Подарункові набори
+                                  {gameCategories[0].title}
                                 </div>
                                 <p className="text-sm leading-tight text-gray-600">
-                                  Найкращі ігри для особливих моментів та незабутніх вражень
+                                  {gameCategories[0].description}
                                 </p>
-                              </a>
+                              </Link>
                             </NavigationMenuLink>
                           </li>
-                          <ListItem href="/friends" title="Друзям">
-                            Настольные игры для веселых посиделок с друзьями
-                          </ListItem>
-                          <ListItem href="/couples" title="Парам">
-                            Игры для романтического вечера вдвоем
-                          </ListItem>
-                          <ListItem href="/family" title="Сім'ї">
-                            Семейные игры для всех возрастов
-                          </ListItem>
+                          {gameCategories.slice(1).map((category, index) => (
+                            <ListItem 
+                              key={category.href} 
+                              href={category.href} 
+                              title={category.title}
+                            >
+                              {category.description}
+                            </ListItem>
+                          ))}
                         </ul>
                       </NavigationMenuContent>
                     </NavigationMenuItem>
                     <NavigationMenuItem>
-                      <NavigationMenuTrigger className="text-[14px] font-medium text-gray-600">Для развития</NavigationMenuTrigger>
+                      <NavigationMenuTrigger className="text-[14px] font-medium text-gray-600">Для розвитку</NavigationMenuTrigger>
                       <NavigationMenuContent>
                         <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-                          <ListItem href="/single" title="Для одного">
-                            Индивидуальные развивающие игры
-                          </ListItem>
-                          <ListItem href="/development" title="Развивающие">
-                            Игры для развития памяти и мышления
-                          </ListItem>
-                          <ListItem href="/conversation" title="Разговорные игры">
-                            Игры для улучшения коммуникации
-                          </ListItem>
-                          <ListItem href="/logic" title="Логические игры">
-                            Игры для развития логического мышления
-                          </ListItem>
+                          {developmentGames.map((game) => (
+                            <ListItem 
+                              key={game.href} 
+                              href={game.href} 
+                              title={game.title}
+                            >
+                              {game.description}
+                            </ListItem>
+                          ))}
                         </ul>
                       </NavigationMenuContent>
                     </NavigationMenuItem>
