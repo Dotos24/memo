@@ -100,7 +100,7 @@ const ReviewModal = ({ isOpen, onClose, onSubmit }: ReviewModalProps) => {
                                 />
                             </label>
                             <span className="text-sm text-gray-500">
-                                {selectedFile ? selectedFile.name : 'Файл не выбран'}
+                                {selectedFile ? selectedFile.name : &quot;Файл не выбран&quot;}
                             </span>
                         </div>
                     </div>
@@ -109,7 +109,7 @@ const ReviewModal = ({ isOpen, onClose, onSubmit }: ReviewModalProps) => {
                     <div className="grid grid-cols-2 gap-4">
                         <div>
                             <label className="block mb-2 font-medium">
-                                Ваше ім'я <span className="text-red-500">*</span>
+                                Ваше ім&apos;я <span className="text-red-500">*</span>
                             </label>
                             <input
                                 type="text"

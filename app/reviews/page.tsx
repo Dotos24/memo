@@ -1,11 +1,9 @@
 "use client";
 
-import { useState } from 'react';
 import Support from "@/components/Support/Support";
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
 import { Reviews } from '@/components/Coments/Coments';
-import { motion } from 'framer-motion';
 
 const ReviewsPage = () => {
     return (

@@ -1,7 +1,7 @@
 "use client"
-import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'framer-motion';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import useEmblaCarousel from 'embla-carousel-react';
-import { useRef, useEffect, useState, useCallback } from 'react';
+import { useRef, useState, useCallback } from 'react';
 import Image from 'next/image';
 import { FiHeart, FiUsers, FiSmile, FiGlobe, FiChevronLeft, FiChevronRight, FiX } from 'react-icons/fi';
 

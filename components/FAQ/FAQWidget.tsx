@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiChevronDown, FiSearch, FiPackage, FiCreditCard, FiHelpCircle, FiThumbsUp, FiThumbsDown, FiMessageSquare } from 'react-icons/fi';
+import { FiChevronDown, FiSearch, FiPackage, FiCreditCard, FiHelpCircle, FiThumbsUp, FiThumbsDown } from 'react-icons/fi';
 
 interface FAQItem {
     id: number;

@@ -1,8 +1,7 @@
 "use client"
 import { useState } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { FiPhone, FiMail, FiClock, FiInstagram, FiSend } from 'react-icons/fi';
+import { FiPhone, FiClock, FiInstagram, FiSend } from 'react-icons/fi';
 
 export default function Footer() {
     const [email, setEmail] = useState('');
@@ -92,7 +91,7 @@ export default function Footer() {
                         <div>
                             <h3 className="font-bold mb-2">Знижка від 100 до 300 грн на перше замовлення ⬇️</h3>
                             <p className="text-gray-600 text-sm">
-                                Отримуйте персональні знижки та дізнавайтеся першими про наші новинки!
+                                Отримайте персональні знижки та дізнавайтеся першими про наші новинки!
                             </p>
                         </div>
                         <form onSubmit={handleSubmit} className="space-y-4">
@@ -127,7 +126,7 @@ export default function Footer() {
                 {/* Bottom Bar */}
                 <div className="mt-12 pt-8 border-t text-sm text-gray-600">
                     <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-                        <p>© 2019 - 2025, Memo Games</p>
+                        <p> 2019 - 2025, Memo Games</p>
                         <p>Всі права захищено.</p>
                     </div>
                 </div>
