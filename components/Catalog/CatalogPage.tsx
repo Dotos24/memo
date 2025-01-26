@@ -1,10 +1,11 @@
 "use client"
-import { useState } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import Image from 'next/image';
 import { FiFilter, FiGrid, FiList, FiChevronDown, FiHeart, FiShoppingCart, FiX, FiChevronUp } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
+import Link from 'next/link';
 
 const products = [
     {
@@ -183,6 +184,78 @@ export default function CatalogPage() {
         { id: 'duration', title: 'Тривалість гри', isOpen: false },
     ]);
     const [showSort, setShowSort] = useState(false);
+    const [selectedFilters, setSelectedFilters] = useState<{[key: string]: string[]}>({
+        status: [],
+        type: [],
+        players: [],
+        age: [],
+        duration: [],
+    });
+    const [filteredProducts, setFilteredProducts] = useState(products);
+    
+    // Функция фильтрации
+    const applyFilters = useCallback(() => {
+        let result = [...products];
+
+        // Фильтрация по статусу (в наличии/нет в наличии)
+        if (selectedFilters.status.length > 0) {
+            result = result.filter(product => {
+                if (selectedFilters.status.includes('in-stock')) return product.inStock;
+                if (selectedFilters.status.includes('out-stock')) return !product.inStock;
+                return true;
+            });
+        }
+
+        // Фильтрация по цене
+        result = result.filter(product => 
+            product.price >= priceRange.min && 
+            product.price <= priceRange.max
+        );
+
+        // Фильтрация по типу игры
+        if (selectedFilters.type.length > 0) {
+            result = result.filter(product =>
+                selectedFilters.type.some(type => product.type.toLowerCase().includes(type))
+            );
+        }
+
+        // Сортировка
+        switch (sortBy) {
+            case 'price-asc':
+                result.sort((a, b) => a.price - b.price);
+                break;
+            case 'price-desc':
+                result.sort((a, b) => b.price - a.price);
+                break;
+            case 'new':
+                result = result.filter(p => p.isNew);
+                break;
+            case 'rating':
+                result.sort((a, b) => b.rating - a.rating);
+                break;
+            case 'reviews':
+                result.sort((a, b) => b.reviews - a.reviews);
+                break;
+            default: // 'popular' и другие
+                result.sort((a, b) => b.reviews * b.rating - a.reviews * a.rating);
+        }
+
+        setFilteredProducts(result);
+    }, [selectedFilters, priceRange, sortBy, products]);
+
+    // Применяем фильтры при изменении любого из параметров
+    useEffect(() => {
+        applyFilters();
+    }, [selectedFilters, priceRange, sortBy, applyFilters]);
+
+    const handleFilterSelect = (type: string, id: string) => {
+        setSelectedFilters(prev => ({
+            ...prev,
+            [type]: prev[type].includes(id)
+                ? prev[type].filter(item => item !== id)
+                : [...prev[type], id]
+        }));
+    };
 
     const toggleCategory = (categoryId: string) => {
         setSelectedCategories(prev => 
@@ -281,73 +354,132 @@ export default function CatalogPage() {
         title, 
         isOpen, 
         onToggle, 
-        content,
         type 
-    }) => (
-        <div className="group border border-gray-200/60 bg-gray-50/30 rounded-xl">
-            <div 
-                className="flex items-center justify-between gap-2 p-5 cursor-pointer"
-                onClick={onToggle}
-            >
-                <label className="text-sm font-medium text-gray-700">
-                    {title}
-                </label>
-                <button className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors">
-                    {isOpen ? <FiChevronUp size={16} /> : <FiChevronDown size={16} />}
-                </button>
+    }) => {
+        const getContent = () => {
+            if (type === 'price') {
+                return (
+                    <PriceRangeFilter 
+                        range={filterData.priceRange} 
+                        onChange={(values) => {
+                            console.log('Price range changed:', values);
+                        }} 
+                    />
+                );
+            }
+
+            // Get the correct data based on type
+            let filterItems;
+            switch(type) {
+                case 'status':
+                    filterItems = filterData.status;
+                    break;
+                case 'type':
+                    filterItems = filterData.type;
+                    break;
+                case 'players':
+                    filterItems = filterData.playerCount;
+                    break;
+                case 'age':
+                    filterItems = filterData.age;
+                    break;
+                case 'duration':
+                    filterItems = filterData.duration;
+                    break;
+                default:
+                    filterItems = [];
+            }
+
+            return (
+                <div className="flex flex-wrap gap-2">
+                    {filterItems.map((item) => {
+                        const isSelected = selectedFilters[type]?.includes(item.id);
+                        return (
+                            <button
+                                key={item.id}
+                                onClick={() => handleFilterSelect(type, item.id)}
+                                className={`px-4 py-2 text-sm font-medium rounded-xl transition-all duration-200
+                                    flex items-center gap-2 
+                                    ${isSelected 
+                                        ? 'bg-[#A7AA2E] text-white border-transparent shadow-md hover:bg-[#959827]' 
+                                        : 'border border-gray-200 hover:border-[#A7AA2E] hover:text-[#A7AA2E]'
+                                    }`}
+                            >
+                                <span>{item.name}</span>
+                                <span className={`text-xs ${isSelected ? 'text-white/80' : 'text-gray-400'}`}>
+                                    ({item.count})
+                                </span>
+                            </button>
+                        );
+                    })}
+                </div>
+            );
+        };
+
+        return (
+            <div className="group border border-gray-200/60 bg-gray-50/30 rounded-xl">
+                <div 
+                    className="flex items-center justify-between gap-2 p-5 cursor-pointer"
+                    onClick={onToggle}
+                >
+                    <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                        {title}
+                        {selectedFilters[type]?.length > 0 && (
+                            <span className="bg-[#A7AA2E] text-white text-xs px-2 py-0.5 rounded-full">
+                                {selectedFilters[type].length}
+                            </span>
+                        )}
+                    </label>
+                    <button className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors">
+                        {isOpen ? <FiChevronUp size={16} /> : <FiChevronDown size={16} />}
+                    </button>
+                </div>
+                <div className="overflow-hidden">
+                    <AnimatePresence initial={false}>
+                        {isOpen && (
+                            <motion.div
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ 
+                                    height: "auto", 
+                                    opacity: 1,
+                                    transition: {
+                                        height: { duration: 0.2 },
+                                        opacity: { duration: 0.2, delay: 0.1 }
+                                    }
+                                }}
+                                exit={{ 
+                                    height: 0,
+                                    opacity: 0,
+                                    transition: {
+                                        height: { duration: 0.2 },
+                                        opacity: { duration: 0.1 }
+                                    }
+                                }}
+                                className="origin-top"
+                            >
+                                <div className="px-5 pb-5">
+                                    {getContent()}
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </div>
             </div>
-            <div className="overflow-hidden">
-                <AnimatePresence initial={false}>
-                    {isOpen && (
-                        <motion.div
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ 
-                                height: "auto", 
-                                opacity: 1,
-                                transition: {
-                                    height: { duration: 0.2 },
-                                    opacity: { duration: 0.2, delay: 0.1 }
-                                }
-                            }}
-                            exit={{ 
-                                height: 0,
-                                opacity: 0,
-                                transition: {
-                                    height: { duration: 0.2 },
-                                    opacity: { duration: 0.1 }
-                                }
-                            }}
-                            className="origin-top"
-                        >
-                            <div className="px-5 pb-5">
-                                {type === 'price' ? (
-                                    <PriceRangeFilter 
-                                        range={filterData.priceRange} 
-                                        onChange={(values) => {
-                                            console.log('Price range changed:', values);
-                                        }} 
-                                    />
-                                ) : (
-                                    <div className="flex flex-wrap gap-2">
-                                        {content.map((item) => (
-                                            <button
-                                                key={item.id}
-                                                className="px-4 py-2 text-sm font-medium rounded-xl transition-colors
-                                                    border border-gray-200 hover:bg-gray-100 flex items-center gap-2"
-                                            >
-                                                <span>{item.name}</span>
-                                                <span className="text-gray-400">({item.count})</span>
-                                            </button>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
-            </div>
-        </div>
-    );
+        );
+    };
+
+    // Обновляем функцию очистки фильтров
+    const clearFilters = () => {
+        setSelectedFilters({
+            status: [],
+            type: [],
+            players: [],
+            age: [],
+            duration: [],
+        });
+        setPriceRange({ min: 0, max: 2000 });
+        setSortBy('popular');
+    };
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white py-12">
@@ -451,15 +583,22 @@ export default function CatalogPage() {
                                                 )
                                             );
                                         }}
-                                        content={filterData[section.id === 'price' ? 'priceRange' : section.id]}
                                         type={section.id}
                                     />
                                 ))}
                             </div>
                             
-                            <button className="w-full mt-4 px-6 py-3.5 bg-black text-white rounded-xl flex items-center justify-center gap-2 hover:bg-gray-900 transition-colors">
+                            <button 
+                                onClick={clearFilters}
+                                className="w-full mt-4 px-6 py-3.5 bg-black text-white rounded-xl flex items-center justify-center gap-2 hover:bg-gray-900 transition-colors"
+                            >
                                 <FiX size={20} />
                                 Очистити фільтри
+                                {Object.values(selectedFilters).some(arr => arr.length > 0) && (
+                                    <span className="bg-[#A7AA2E] text-white text-xs px-2 py-0.5 rounded-full ml-2">
+                                        {Object.values(selectedFilters).reduce((acc, arr) => acc + arr.length, 0)}
+                                    </span>
+                                )}
                             </button>
                         </div>
                     </motion.div>
@@ -471,145 +610,167 @@ export default function CatalogPage() {
                         className="flex-1 pl-8"
                     >
                         <div className={viewType === 'grid' 
-                            ? `grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6`
-                            : 'space-y-4'
+                            ? `grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6 h-full`
+                            : 'space-y-4 h-full'
                         }>
-                            {products.map((product, index) => (
+                            {filteredProducts.length > 0 ? (
+                                filteredProducts.map((product, index) => (
+                                    <motion.div 
+                                        key={product.id}
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: index * 0.1 }}
+                                        className="h-full"
+                                    >
+                                        {viewType === 'grid' ? (
+                                            <Link href="/product" className="block group bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 h-full">
+                                                <div className="relative">
+                                                    <div className="relative h-64 overflow-hidden">
+                                                        <Image
+                                                            src={product.image}
+                                                            alt={product.name}
+                                                            layout="fill"
+                                                            objectFit="cover"
+                                                            className="group-hover:scale-110 transition-transform duration-500"
+                                                        />
+                                                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                                                    </div>
+                                                    {/* Enhanced Badges */}
+                                                    <div className="absolute top-4 left-4 flex gap-2">
+                                                        {product.isNew && (
+                                                            <motion.span 
+                                                                initial={{ opacity: 0, scale: 0.8 }}
+                                                                animate={{ opacity: 1, scale: 1 }}
+                                                                className="bg-black text-white text-xs font-medium px-3 py-1.5 rounded-full shadow-lg"
+                                                            >
+                                                                Новинка
+                                                            </motion.span>
+                                                        )}
+                                                        {product.oldPrice && (
+                                                            <span className="bg-red-500 text-white text-xs font-medium px-2 py-1 rounded-full">
+                                                                -{Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)}%
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                    <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-4 group-hover:translate-x-0">
+                                                        <button className="w-10 h-10 flex items-center justify-center bg-white rounded-xl shadow-lg hover:bg-gray-50 transition-colors">
+                                                            <FiHeart size={18} className="text-gray-600" />
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div className="p-4 flex-1 flex flex-col">
+                                                    <div className="flex items-center gap-2 mb-2">
+                                                        <span className={`w-2 h-2 rounded-full ${product.inStock ? 'bg-green-500' : 'bg-red-500'}`} />
+                                                        <span className="text-sm text-gray-500">
+                                                            {product.inStock ? 'В наявності' : 'Немає в наявності'}
+                                                        </span>
+                                                    </div>
+                                                    <h3 className="font-semibold text-lg mb-2 group-hover:text-blue-600 transition-colors">
+                                                        {product.name}
+                                                    </h3>
+                                                    <p className="text-sm text-gray-500 mb-4 flex-grow">{product.description}</p>
+                                                    <div className="flex items-center justify-between mt-auto">
+                                                        <div className="flex flex-col">
+                                                            <span className="font-bold text-lg">{product.price} ₴</span>
+                                                            {product.oldPrice && (
+                                                                <span className="text-sm text-gray-400 line-through">
+                                                                    {product.oldPrice} ₴
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                        <button className="bg-black text-white p-3 rounded-xl hover:bg-gray-800 transition-colors">
+                                                            <FiShoppingCart size={18} />
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </Link>
+                                        ) : (
+                                            <Link href="/product" className="flex gap-6 p-4 group bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300 h-full">
+                                                <div className="relative w-48 h-48 flex-shrink-0">
+                                                    <div className="relative h-full rounded-xl overflow-hidden">
+                                                        <Image
+                                                            src={product.image}
+                                                            alt={product.name}
+                                                            layout="fill"
+                                                            objectFit="cover"
+                                                            className="group-hover:scale-105 transition-transform duration-500"
+                                                        />
+                                                    </div>
+                                                    {/* Badges */}
+                                                    <div className="absolute top-2 left-2 flex gap-2">
+                                                        {product.isNew && (
+                                                            <motion.span 
+                                                                initial={{ opacity: 0, scale: 0.8 }}
+                                                                animate={{ opacity: 1, scale: 1 }}
+                                                                className="bg-black text-white text-xs font-medium px-3 py-1.5 rounded-full shadow-lg"
+                                                            >
+                                                                Новинка
+                                                            </motion.span>
+                                                        )}
+                                                        {product.oldPrice && (
+                                                            <span className="bg-red-500 text-white text-xs font-medium px-2 py-1 rounded-full">
+                                                                -{Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)}%
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                <div className="flex-1 flex flex-col py-2">
+                                                    <div className="flex items-center gap-2 mb-2">
+                                                        <span className={`w-2 h-2 rounded-full ${product.inStock ? 'bg-green-500' : 'bg-red-500'}`} />
+                                                        <span className="text-sm text-gray-500">
+                                                            {product.inStock ? 'В наявності' : 'Немає в наявності'}
+                                                        </span>
+                                                    </div>
+                                                    <h3 className="text-xl font-semibold mb-2 group-hover:text-blue-600 transition-colors">
+                                                        {product.name}
+                                                    </h3>
+                                                    <p className="text-gray-600 mb-4 flex-grow">{product.description}</p>
+                                                    <div className="flex items-center justify-between mt-auto">
+                                                        <div className="flex flex-col">
+                                                            <span className="text-2xl font-bold">{product.price} ₴</span>
+                                                            {product.oldPrice && (
+                                                                <span className="text-sm text-gray-400 line-through">
+                                                                    {product.oldPrice} ₴
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                        <div className="flex gap-2">
+                                                            <button className="p-3 rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors">
+                                                                <FiHeart size={20} className="text-gray-600" />
+                                                            </button>
+                                                            <button className="bg-black text-white px-6 py-3 rounded-xl hover:bg-gray-900 transition-colors flex items-center gap-2">
+                                                                <FiShoppingCart size={20} />
+                                                                <span>В кошик</span>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </Link>
+                                        )}
+                                    </motion.div>
+                                ))
+                            ) : (
                                 <motion.div 
-                                    key={product.id}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: index * 0.1 }}
-                                    className={`group bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300 
-                                        ${viewType === 'grid' ? 'flex flex-col hover:-translate-y-1' : ''}`}
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    className="col-span-full text-center py-12"
                                 >
-                                    {viewType === 'grid' ? (
-                                        <>
-                                            <div className="relative">
-                                                <div className="relative h-64 overflow-hidden">
-                                                    <Image
-                                                        src={product.image}
-                                                        alt={product.name}
-                                                        layout="fill"
-                                                        objectFit="cover"
-                                                        className="group-hover:scale-110 transition-transform duration-500"
-                                                    />
-                                                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                                                </div>
-                                                {/* Enhanced Badges */}
-                                                <div className="absolute top-4 left-4 flex gap-2">
-                                                    {product.isNew && (
-                                                        <motion.span 
-                                                            initial={{ opacity: 0, scale: 0.8 }}
-                                                            animate={{ opacity: 1, scale: 1 }}
-                                                            className="bg-black text-white text-xs font-medium px-3 py-1.5 rounded-full shadow-lg"
-                                                        >
-                                                            Новинка
-                                                        </motion.span>
-                                                    )}
-                                                    {product.oldPrice && (
-                                                        <span className="bg-red-500 text-white text-xs font-medium px-2 py-1 rounded-full">
-                                                            -{Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)}%
-                                                        </span>
-                                                    )}
-                                                </div>
-                                                <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-4 group-hover:translate-x-0">
-                                                    <button className="w-10 h-10 flex items-center justify-center bg-white rounded-xl shadow-lg hover:bg-gray-50 transition-colors">
-                                                        <FiHeart size={18} className="text-gray-600" />
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <div className="p-4 flex-1 flex flex-col">
-                                                <div className="flex items-center gap-2 mb-2">
-                                                    <span className={`w-2 h-2 rounded-full ${product.inStock ? 'bg-green-500' : 'bg-red-500'}`} />
-                                                    <span className="text-sm text-gray-500">
-                                                        {product.inStock ? 'В наявності' : 'Немає в наявності'}
-                                                    </span>
-                                                </div>
-                                                <h3 className="font-semibold text-lg mb-2 group-hover:text-blue-600 transition-colors">
-                                                    {product.name}
-                                                </h3>
-                                                <p className="text-sm text-gray-500 mb-4 flex-grow">{product.description}</p>
-                                                <div className="flex items-center justify-between mt-auto">
-                                                    <div className="flex flex-col">
-                                                        <span className="font-bold text-lg">{product.price} ₴</span>
-                                                        {product.oldPrice && (
-                                                            <span className="text-sm text-gray-400 line-through">
-                                                                {product.oldPrice} ₴
-                                                            </span>
-                                                        )}
-                                                    </div>
-                                                    <button className="bg-black text-white p-3 rounded-xl hover:bg-gray-800 transition-colors">
-                                                        <FiShoppingCart size={18} />
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </>
-                                    ) : (
-                                        <div className="flex gap-6 p-4">
-                                            <div className="relative w-48 h-48 flex-shrink-0">
-                                                <div className="relative h-full rounded-xl overflow-hidden">
-                                                    <Image
-                                                        src={product.image}
-                                                        alt={product.name}
-                                                        layout="fill"
-                                                        objectFit="cover"
-                                                        className="group-hover:scale-105 transition-transform duration-500"
-                                                    />
-                                                </div>
-                                                {/* Badges */}
-                                                <div className="absolute top-2 left-2 flex gap-2">
-                                                    {product.isNew && (
-                                                        <motion.span 
-                                                            initial={{ opacity: 0, scale: 0.8 }}
-                                                            animate={{ opacity: 1, scale: 1 }}
-                                                            className="bg-black text-white text-xs font-medium px-3 py-1.5 rounded-full shadow-lg"
-                                                        >
-                                                            Новинка
-                                                        </motion.span>
-                                                    )}
-                                                    {product.oldPrice && (
-                                                        <span className="bg-red-500 text-white text-xs font-medium px-2 py-1 rounded-full">
-                                                            -{Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)}%
-                                                        </span>
-                                                    )}
-                                                </div>
-                                            </div>
-                                            <div className="flex-1 flex flex-col py-2">
-                                                <div className="flex items-center gap-2 mb-2">
-                                                    <span className={`w-2 h-2 rounded-full ${product.inStock ? 'bg-green-500' : 'bg-red-500'}`} />
-                                                    <span className="text-sm text-gray-500">
-                                                        {product.inStock ? 'В наявності' : 'Немає в наявності'}
-                                                    </span>
-                                                </div>
-                                                <h3 className="text-xl font-semibold mb-2 group-hover:text-blue-600 transition-colors">
-                                                    {product.name}
-                                                </h3>
-                                                <p className="text-gray-600 mb-4 flex-grow">{product.description}</p>
-                                                <div className="flex items-center justify-between mt-auto">
-                                                    <div className="flex flex-col">
-                                                        <span className="text-2xl font-bold">{product.price} ₴</span>
-                                                        {product.oldPrice && (
-                                                            <span className="text-sm text-gray-400 line-through">
-                                                                {product.oldPrice} ₴
-                                                            </span>
-                                                        )}
-                                                    </div>
-                                                    <div className="flex gap-2">
-                                                        <button className="p-3 rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors">
-                                                            <FiHeart size={20} className="text-gray-600" />
-                                                        </button>
-                                                        <button className="bg-black text-white px-6 py-3 rounded-xl hover:bg-gray-900 transition-colors flex items-center gap-2">
-                                                            <FiShoppingCart size={20} />
-                                                            <span>В кошик</span>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )}
+                                    <div className="text-6xl mb-4">🔍</div>
+                                    <h3 className="text-xl font-medium mb-2">
+                                        Товари не знайдено
+                                    </h3>
+                                    <p className="text-gray-500 mb-6">
+                                        Спробуйте змінити параметри фільтрації
+                                    </p>
+                                    <button 
+                                        onClick={clearFilters}
+                                        className="inline-flex items-center justify-center px-6 py-3 border border-gray-200 
+                                            rounded-xl text-gray-700 hover:bg-gray-50 transition-colors"
+                                    >
+                                        Скинути фільтри
+                                    </button>
                                 </motion.div>
-                            ))}
+                            )}
                         </div>
                     </motion.div>
                 </div>

@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 import Image from 'next/image';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { motion } from 'framer-motion';
 
 const images = [
     {
@@ -66,11 +67,23 @@ const Carousel = () => {
     }, [emblaApi, onSelect]);
 
     return (
-        <div className="pt-10 pb-16">
+        <motion.div 
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="pt-10 pb-16"
+        >
             <div className="container mx-auto px-4">
                 <div className="flex gap-4">
                     {/* Main Carousel - Increased width */}
-                    <div className="relative flex-[2]">
+                    <motion.div 
+                        initial={{ x: -100, opacity: 0 }}
+                        whileInView={{ x: 0, opacity: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.6, delay: 0.2 }}
+                        className="relative flex-[2]"
+                    >
                         <div className="overflow-hidden h-[700px] rounded-2xl" ref={emblaRef}>
                             <div className="flex h-full">
                                 {images.map((image) => (
@@ -118,10 +131,16 @@ const Carousel = () => {
                                 />
                             ))}
                         </div>
-                    </div>
+                    </motion.div>
 
                     {/* Modified Product Card */}
-                    <div className="flex-1">
+                    <motion.div 
+                        initial={{ x: 100, opacity: 0 }}
+                        whileInView={{ x: 0, opacity: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.6, delay: 0.4 }}
+                        className="flex-1"
+                    >
                         <div className="h-[700px]">
                             {products.map((product) => (
                                 <div 
@@ -168,10 +187,10 @@ const Carousel = () => {
                                 </div>
                             ))}
                         </div>
-                    </div>
+                    </motion.div>
                 </div>
             </div>
-        </div>
+        </motion.div>
     );
 };
 
