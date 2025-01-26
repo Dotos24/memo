@@ -218,43 +218,47 @@ const Header = () => {
                         <ul className="grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
                           <li className="row-span-3">
                             <NavigationMenuLink asChild>
-                              <a className="flex h-full w-full select-none flex-col justify-end rounded-md bg-[#CC926A] p-6 no-underline outline-none focus:shadow-md">
-                                <div className="mb-2 text-lg font-medium">
-                                  Подарункові набори
+                              <a className="flex h-full w-full select-none flex-col justify-end rounded-md p-6 no-underline outline-none focus:shadow-md relative overflow-hidden group">
+                                <div className="absolute inset-0 bg-[url('/test.png')] bg-cover bg-center transition-transform duration-300 group-hover:scale-110" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/20" />
+                                <div className="relative z-10">
+                                  <div className="mb-2 text-lg font-medium text-white">
+                                    Подарункові набори
+                                  </div>
+                                  <p className="text-sm leading-tight text-gray-100">
+                                    Найкращі ігри для особливих моментів та незабутніх вражень
+                                  </p>
                                 </div>
-                                <p className="text-sm leading-tight text-gray-600">
-                                  Найкращі ігри для особливих моментів та незабутніх вражень
-                                </p>
                               </a>
                             </NavigationMenuLink>
                           </li>
                           <ListItem href="/friends" title="Друзям">
-                            Настольные игры для веселых посиделок с друзьями
+                          Настільні ігри для веселих посиденьок з друзями.
                           </ListItem>
                           <ListItem href="/couples" title="Парам">
-                            Игры для романтического вечера вдвоем
+                          Ігри для романтичного вечора вдвох
                           </ListItem>
                           <ListItem href="/family" title="Сім'ї">
-                            Семейные игры для всех возрастов
+                          Сімейні ігри для всіх вікових категорій
                           </ListItem>
                         </ul>
                       </NavigationMenuContent>
                     </NavigationMenuItem>
                     <NavigationMenuItem>
-                      <NavigationMenuTrigger className="text-[14px] font-medium text-gray-600">Для развития</NavigationMenuTrigger>
+                      <NavigationMenuTrigger className="text-[14px] font-medium text-gray-600">Для розвитку</NavigationMenuTrigger>
                       <NavigationMenuContent>
                         <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
                           <ListItem href="/single" title="Для одного">
-                            Индивидуальные развивающие игры
+                          Індивідуальні розвиваючі ігри
                           </ListItem>
-                          <ListItem href="/development" title="Развивающие">
-                            Игры для развития памяти и мышления
+                          <ListItem href="/development" title="Розвиваючі">
+                          Ігри для розвитку пам'яті та мислення
                           </ListItem>
-                          <ListItem href="/conversation" title="Разговорные игры">
-                            Игры для улучшения коммуникации
+                          <ListItem href="/conversation" title="Розмовні ігри">
+                          Ігри для покращення комунікації
                           </ListItem>
-                          <ListItem href="/logic" title="Логические игры">
-                            Игры для развития логического мышления
+                          <ListItem href="/logic" title="Логічні ігри">
+                          Ігри для розвитку логічного мислення
                           </ListItem>
                         </ul>
                       </NavigationMenuContent>

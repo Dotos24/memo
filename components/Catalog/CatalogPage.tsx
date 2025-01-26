@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { FiFilter, FiGrid, FiList, FiChevronDown, FiHeart, FiShoppingCart, FiX } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
+import { BsFilterSquare } from 'react-icons/bs';
 
 const products = [
     {
@@ -104,6 +105,49 @@ export default function CatalogPage() {
         );
     };
 
+    const filterVariants = {
+        container: {
+            hidden: { opacity: 0, x: -20 },
+            visible: {
+                opacity: 1,
+                x: 0,
+                transition: {
+                    duration: 0.3,
+                    staggerChildren: 0.1
+                }
+            }
+        },
+        item: {
+            hidden: { opacity: 0, y: 10 },
+            visible: { 
+                opacity: 1, 
+                y: 0,
+                transition: {
+                    duration: 0.3
+                }
+            }
+        }
+    };
+
+    const filterContentVariants = {
+        hidden: { 
+            opacity: 0,
+            height: 0,
+            transition: {
+                duration: 0.2,
+                ease: "easeInOut"
+            }
+        },
+        visible: { 
+            opacity: 1,
+            height: "auto",
+            transition: {
+                duration: 0.3,
+                ease: "easeInOut"
+            }
+        }
+    };
+
     return (
         <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white py-12">
             <div className="container">
@@ -163,150 +207,159 @@ export default function CatalogPage() {
 
                     {/* Enhanced Filters */}
                     <motion.div 
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.4, ease: "easeOut" }}
-                        className="w-80 flex-shrink-0 pr-8"
+                        variants={filterVariants.container}
+                        initial="hidden"
+                        animate="visible"
+                        className="w-80 flex-shrink-0"
                     >
-                        <div className="sticky top-24">
-                            <motion.div 
-                                className="rounded-2xl"
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ duration: 0.3 }}
-                            >
-                                {/* Filter Header */}
-                                <div className="p-6">
-                                    <div className="flex items-center justify-between">
-                                        <div className="flex items-center gap-2">
-                                            <FiFilter className="text-gray-700" />
-                                            <h2 className="font-semibold text-gray-900">Фільтри</h2>
+                        <div className="sticky top-24 bg-white rounded-2xl shadow-lg border border-gray-100">
+                            {/* Filter Header */}
+                            <div className="p-6 border-b border-gray-100">
+                                <div className="flex items-center justify-between">
+                                    <motion.div 
+                                        className="flex items-center gap-3"
+                                        whileHover={{ scale: 1.02 }}
+                                    >
+                                        <div className="p-2 bg-blue-50 rounded-lg">
+                                            <BsFilterSquare className="w-5 h-5 text-blue-600" />
                                         </div>
-                                        <button 
-                                            onClick={() => setShowFilters(!showFilters)}
-                                            className="text-sm text-gray-500 hover:text-gray-900"
-                                        >
-                                            {showFilters ? 'Згорнути' : 'Розгорнути'}
-                                        </button>
-                                    </div>
-                                    <AnimatePresence>
-                                        {selectedCategories.length > 0 && (
-                                            <motion.div 
-                                                initial={{ opacity: 0, y: -10 }}
-                                                animate={{ opacity: 1, y: 0 }}
-                                                exit={{ opacity: 0, y: -10 }}
-                                                className="mt-4 flex flex-wrap gap-2"
-                                            >
-                                                {selectedCategories.map((categoryId, index) => {
-                                                    const category = categories.find(c => c.id === categoryId);
-                                                    return (
-                                                        <motion.button
-                                                            key={categoryId}
-                                                            initial={{ opacity: 0, scale: 0.8 }}
-                                                            animate={{ opacity: 1, scale: 1 }}
-                                                            exit={{ opacity: 0, scale: 0.8 }}
-                                                            transition={{ delay: index * 0.05 }}
-                                                            onClick={() => toggleCategory(categoryId)}
-                                                            className="inline-flex items-center gap-1 px-3 py-1 bg-black text-white text-sm rounded-full hover:bg-gray-800 transition-all duration-200 hover:scale-105"
-                                                            whileHover={{ scale: 1.05 }}
-                                                            whileTap={{ scale: 0.95 }}
-                                                        >
-                                                            {category?.name}
-                                                            <motion.span
-                                                                whileHover={{ rotate: 90 }}
-                                                                transition={{ duration: 0.2 }}
-                                                            >
-                                                                <FiX size={14} />
-                                                            </motion.span>
-                                                        </motion.button>
-                                                    );
-                                                })}
-                                            </motion.div>
-                                        )}
-                                    </AnimatePresence>
+                                        <h2 className="text-lg font-semibold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+                                            Фільтри
+                                        </h2>
+                                    </motion.div>
+                                    <motion.button 
+                                        onClick={() => setShowFilters(!showFilters)}
+                                        className="text-sm text-gray-500 hover:text-blue-600 transition-colors"
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.95 }}
+                                    >
+                                        {showFilters ? 'Згорнути' : 'Розгорнути'}
+                                    </motion.button>
                                 </div>
-
+                                
+                                {/* Active Filters */}
                                 <AnimatePresence>
-                                    {showFilters && (
+                                    {selectedCategories.length > 0 && (
                                         <motion.div 
                                             initial={{ opacity: 0, height: 0 }}
-                                            animate={{ opacity: 1, height: "auto" }}
+                                            animate={{ opacity: 1, height: 'auto' }}
                                             exit={{ opacity: 0, height: 0 }}
-                                            transition={{ duration: 0.3, ease: "easeInOut" }}
-                                            className="space-y-8"
+                                            className="mt-4 flex flex-wrap gap-2"
                                         >
-                                            {/* Price Range */}
+                                            {selectedCategories.map((categoryId, index) => {
+                                                const category = categories.find(c => c.id === categoryId);
+                                                return (
+                                                    <motion.button
+                                                        key={categoryId}
+                                                        initial={{ scale: 0 }}
+                                                        animate={{ scale: 1 }}
+                                                        exit={{ scale: 0 }}
+                                                        whileHover={{ scale: 1.05 }}
+                                                        whileTap={{ scale: 0.95 }}
+                                                        onClick={() => toggleCategory(categoryId)}
+                                                        className="group flex items-center gap-1 px-3 py-1.5 bg-blue-50 text-blue-600 text-sm rounded-full hover:bg-blue-100 transition-all duration-200"
+                                                    >
+                                                        {category?.name}
+                                                        <FiX className="w-3 h-3 group-hover:rotate-90 transition-transform" />
+                                                    </motion.button>
+                                                );
+                                            })}
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </div>
+
+                            <AnimatePresence mode="wait">
+                                {showFilters && (
+                                    <motion.div 
+                                        variants={filterContentVariants}
+                                        initial="hidden"
+                                        animate="visible"
+                                        exit="hidden"
+                                        className="overflow-hidden"
+                                    >
+                                        <div className="divide-y divide-gray-100">
+                                            {/* Price Range Section */}
                                             <motion.div 
-                                                initial={{ opacity: 0, y: 20 }}
-                                                animate={{ opacity: 1, y: 0 }}
-                                                transition={{ delay: 0.1 }}
-                                                className="border-t border-gray-100 pt-6 px-6"
+                                                variants={filterVariants.item}
+                                                className="p-6 space-y-4"
                                             >
-                                                <h3 className="font-medium text-gray-900 mb-4">Ціна</h3>
+                                                <h3 className="font-medium text-gray-900">Ціна</h3>
                                                 <div className="space-y-4">
-                                                    <div className="flex items-center justify-between text-sm text-gray-500">
-                                                        <span>{priceRange.min} ₴</span>
-                                                        <span>{priceRange.max} ₴</span>
-                                                    </div>
-                                                    <input 
-                                                        type="range" 
-                                                        min="0"
-                                                        max="2000"
-                                                        value={priceRange.max}
-                                                        onChange={(e) => setPriceRange(prev => ({ ...prev, max: Number(e.target.value) }))}
-                                                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-black"
-                                                    />
+                                                    <motion.div 
+                                                        className="h-2 bg-gray-100 rounded-full relative"
+                                                        whileHover={{ scale: 1.02 }}
+                                                    >
+                                                        <div 
+                                                            className="absolute h-full bg-blue-500 rounded-full"
+                                                            style={{
+                                                                left: `${(priceRange.min / 2000) * 100}%`,
+                                                                right: `${100 - (priceRange.max / 2000) * 100}%`
+                                                            }}
+                                                        />
+                                                    </motion.div>
+                                                    
                                                     <div className="flex gap-4">
-                                                        <div className="relative flex-1">
+                                                        <motion.div 
+                                                            className="relative flex-1"
+                                                            whileHover={{ scale: 1.02 }}
+                                                        >
                                                             <input 
-                                                                type="number" 
+                                                                type="number"
                                                                 value={priceRange.min}
                                                                 onChange={(e) => setPriceRange(prev => ({ ...prev, min: Number(e.target.value) }))}
-                                                                className="w-full pl-3 pr-8 py-2 border border-gray-200 rounded-lg text-sm"
+                                                                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
                                                             />
                                                             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">₴</span>
-                                                        </div>
-                                                        <div className="relative flex-1">
+                                                        </motion.div>
+                                                        <motion.div 
+                                                            className="relative flex-1"
+                                                            whileHover={{ scale: 1.02 }}
+                                                        >
                                                             <input 
                                                                 type="number"
                                                                 value={priceRange.max}
                                                                 onChange={(e) => setPriceRange(prev => ({ ...prev, max: Number(e.target.value) }))}
-                                                                className="w-full pl-3 pr-8 py-2 border border-gray-200 rounded-lg text-sm"
+                                                                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
                                                             />
                                                             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">₴</span>
-                                                        </div>
+                                                        </motion.div>
                                                     </div>
                                                 </div>
                                             </motion.div>
 
-                                            {/* Categories */}
+                                            {/* Categories Section */}
                                             <motion.div 
-                                                initial={{ opacity: 0, y: 20 }}
-                                                animate={{ opacity: 1, y: 0 }}
-                                                transition={{ delay: 0.2 }}
-                                                className="border-t border-gray-100 pt-6 px-6"
+                                                variants={filterVariants.item}
+                                                className="p-6"
                                             >
                                                 <h3 className="font-medium text-gray-900 mb-4">Категорії</h3>
                                                 <div className="space-y-2">
                                                     {categories.map((category, index) => (
                                                         <motion.label 
                                                             key={category.id}
-                                                            initial={{ opacity: 0, x: -20 }}
-                                                            animate={{ opacity: 1, x: 0 }}
-                                                            transition={{ delay: 0.1 + index * 0.05 }}
-                                                            className="flex items-center justify-between p-3 rounded-xl cursor-pointer hover:bg-gray-50/50 transition-all duration-200"
-                                                            whileHover={{ scale: 1.02, backgroundColor: "rgba(0,0,0,0.02)" }}
+                                                            className="flex items-center justify-between p-3 rounded-xl cursor-pointer hover:bg-gray-50 transition-all"
+                                                            whileHover={{ 
+                                                                scale: 1.02,
+                                                                backgroundColor: "rgba(59, 130, 246, 0.05)"
+                                                            }}
                                                         >
                                                             <div className="flex items-center gap-3">
-                                                                <input 
+                                                                <motion.input 
                                                                     type="checkbox"
                                                                     checked={selectedCategories.includes(category.id)}
                                                                     onChange={() => toggleCategory(category.id)}
-                                                                    className="w-5 h-5 border-2 border-gray-300 rounded accent-black"
+                                                                    className="w-5 h-5 border-2 border-gray-300 rounded text-blue-600 focus:ring-blue-500 transition-colors"
+                                                                    whileTap={{ scale: 0.9 }}
                                                                 />
                                                                 <span className="text-gray-700">{category.name}</span>
                                                             </div>
-                                                            <span className="text-sm text-gray-400">{category.count}</span>
+                                                            <motion.span 
+                                                                className="text-sm text-gray-400 bg-gray-100 px-2 py-1 rounded-full"
+                                                                whileHover={{ scale: 1.1 }}
+                                                            >
+                                                                {category.count}
+                                                            </motion.span>
                                                         </motion.label>
                                                     ))}
                                                 </div>
@@ -314,23 +367,21 @@ export default function CatalogPage() {
 
                                             {/* Apply Filters Button */}
                                             <motion.div 
-                                                initial={{ opacity: 0, y: 20 }}
-                                                animate={{ opacity: 1, y: 0 }}
-                                                transition={{ delay: 0.3 }}
-                                                className="px-6 pb-6"
+                                                variants={filterVariants.item}
+                                                className="p-6"
                                             >
                                                 <motion.button 
                                                     whileHover={{ scale: 1.02 }}
                                                     whileTap={{ scale: 0.98 }}
-                                                    className="w-full py-3 bg-black text-white rounded-xl hover:bg-gray-900 transition-colors"
+                                                    className="w-full py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors shadow-lg shadow-blue-200"
                                                 >
                                                     Застосувати фільтри
                                                 </motion.button>
                                             </motion.div>
-                                        </motion.div>
-                                    )}
-                                </AnimatePresence>
-                            </motion.div>
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
                         </div>
                     </motion.div>
 
