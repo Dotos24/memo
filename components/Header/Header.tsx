@@ -12,12 +12,11 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 import { cn } from "@/lib/utils"
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from "framer-motion"
-  import CartDropdown from './CartDropdown';
+import CartDropdown from './CartDropdown';
 import FavoritesDropdown from './FavoritesDropdown';
 
 interface SearchItem {

@@ -2,14 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { motion, useScroll } from 'framer-motion';
-import { FiShoppingCart, FiHeart, FiStar, FiCheckCircle, FiTruck, FiPackage, FiShield, FiMessageSquare, FiVideo, FiThumbsUp } from 'react-icons/fi';
+import { motion } from 'framer-motion';
+import { FiShoppingCart, FiHeart, FiStar, FiCheckCircle, FiTruck, FiPackage, FiShield } from 'react-icons/fi';
 import FAQWidget from '../FAQ/FAQWidget';
 import Reviews from '../Coments/Coments';
 
 const ProductPage = () => {
     const [isSticky, setIsSticky] = useState(false);
-    const [reviewType, setReviewType] = useState<'text' | 'video'>('text');
     
     // Add variants data and state
     const variants = [
@@ -43,7 +42,7 @@ const ProductPage = () => {
         }
     ];
 
-    const [selectedVariant, setSelectedVariant] = useState(variants[0]);
+    const [selectedVariant] = useState(variants[0]);
 
     const productInfo = {
         title: "Між Нами: Kids",
@@ -108,45 +107,13 @@ const ProductPage = () => {
 
     const [selectedImage, setSelectedImage] = useState(productImages[0].url);
 
-    const textReviews = [
-        {
-            id: 1,
-            author: "Олена К.",
-            rating: 5,
-            date: "15.03.2024",
-            content: "Чудова гра для спілкування з дитиною! Допомагає краще зрозуміти її внутрішній світ та переживання.",
-            likes: 12,
-            avatar: "/avatars/user1.jpg"
-        },
-        {
-            id: 2,
-            author: "Михайло В.",
-            rating: 5,
-            date: "12.03.2024",
-            content: "Граємо з донькою вже місяць. Кожного разу відкриваємо щось нове про одне одного. Дуже якісні матеріали та продумані питання.",
-            likes: 8,
-            avatar: "/avatars/user2.jpg"
-        }
-    ];
-
-    const videoReviews = [
-        {
-            id: 1,
-            author: "Родина Петренків",
-            thumbnail: "https://img.youtube.com/vi/DEMO_VIDEO_1/maxresdefault.jpg",
-            videoUrl: "https://youtube.com/watch?v=DEMO_VIDEO_1",
-            rating: 5,
-            views: 1200
-        },
-        {
-            id: 2,
-            author: "Світлана з донькою",
-            thumbnail: "https://img.youtube.com/vi/DEMO_VIDEO_2/maxresdefault.jpg",
-            videoUrl: "https://youtube.com/watch?v=DEMO_VIDEO_2",
-            rating: 5,
-            views: 890
-        }
-    ];
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsSticky(window.scrollY > 100);
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
 
     interface BundleItem {
         name: string;
@@ -206,14 +173,6 @@ const ProductPage = () => {
             </div>
         </div>
     );
-
-    useEffect(() => {
-        const handleScroll = () => {
-            setIsSticky(window.scrollY > 100);
-        };
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
 
     return (
         <>
@@ -317,7 +276,7 @@ const ProductPage = () => {
                                             ВИВЕДІТЬ стосунки з дітьми на новий рівень
                                         </h2>
                                         <p className="text-gray-600 dark:text-gray-400 mt-4">
-                                            Ось три причини, чому гра "Між Нами: Kids" може бути корисною для Вас
+                                            Ось три причини, чому гра &quot;Між Нами: Kids&quot; може бути корисною для Вас
                                         </p>
                                     </div>
 
@@ -369,7 +328,7 @@ const ProductPage = () => {
                                                     03. Допомагайте дітям відчувати, що їх бачать та чують
                                                 </h4>
                                                 <p className="text-gray-600 dark:text-gray-300">
-                                                    Якщо ви хочете розширити можливості своєї дитини, щоб вона прагнула стати найкращою версією себе, одночасно зміцнюючи ваші спільні стосунки – <strong>настільна гра "Між Нами: Kids" є чудовим інструментом для використання.</strong>
+                                                    Якщо ви хочете розширити можливості своєї дитини, щоб вона прагнула стати найкращою версією себе, одночасно зміцнюючи ваші спільні стосунки – <strong>настільна гра &quot;Між Нами: Kids&quot; є чудовим інструментом для використання.</strong>
                                                 </p>
                                             </div>
                                             <div className="relative aspect-square rounded-xl overflow-hidden">

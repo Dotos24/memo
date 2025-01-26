@@ -3,11 +3,9 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiStar, FiMessageSquare, FiVideo, FiThumbsUp, FiImage, FiCalendar } from 'react-icons/fi';
+import { FiStar, FiImage, FiVideo } from 'react-icons/fi';
 import { useRouter } from 'next/navigation';
 import ReviewModal from '../Reviews/ReviewModal';
-import { Link } from 'lucide-react';
-
 
 interface Review {
     id: number;
@@ -21,6 +19,14 @@ interface Review {
     verified?: boolean;
 }
 
+interface ReviewData {
+    rating: number;
+    review: string;
+    name: string;
+    email: string;
+    selectedFile: File | null;
+}
+
 interface ReviewsProps {
     showAll?: boolean;
 }
@@ -30,9 +36,10 @@ export const Reviews = ({ showAll = false }: ReviewsProps) => {
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const handleReviewSubmit = (reviewData: any) => {
+    const handleReviewSubmit = (reviewData: ReviewData) => {
         console.log('Review submitted:', reviewData);
         // Здесь будет логика отправки отзыва на сервер
+        setIsModalOpen(false);
     };
 
     const reviews: Review[] = [
@@ -239,7 +246,7 @@ export const Reviews = ({ showAll = false }: ReviewsProps) => {
                             <div className="flex items-center justify-between text-xs text-gray-500">
                                 <div className="flex items-center gap-1">
                                     <button className="hover:text-gray-700">
-                                        <FiThumbsUp className="w-3 h-3" />
+                                        <FiStar className="w-3 h-3" />
                                     </button>
                                     <span>{review.likes}</span>
                                 </div>
@@ -247,75 +254,34 @@ export const Reviews = ({ showAll = false }: ReviewsProps) => {
                         </motion.div>
                     ))}
                 </div>
-
-                {/* Show More Button - показываем только на странице продукта */}
-                {!showAll && reviews.length > 6 && (
-                    <div className="mt-8 text-center">
-                        <button
-                            onClick={() => router.push('/reviews')}
-                            className="inline-flex items-center gap-2 px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-xl transition-colors"
-                        >
-                            Показати всі відгуки
-                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                            </svg>
-                        </button>
-                    </div>
-                )}
-
-                {/* Pagination - показываем только на странице всех отзывов */}
-                {showAll && (
-                    <div className="mt-8 flex justify-center">
-                        <nav className="flex items-center gap-2">
-                            <button className="p-2 rounded-lg hover:bg-gray-100">
-                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                                </svg>
-                            </button>
-                            <div className="flex items-center gap-1">
-                                <button className="px-4 py-2 rounded-lg bg-black text-white">1</button>
-                                <button className="px-4 py-2 rounded-lg hover:bg-gray-100">2</button>
-                                <button className="px-4 py-2 rounded-lg hover:bg-gray-100">3</button>
-                                <span className="px-2">...</span>
-                                <button className="px-4 py-2 rounded-lg hover:bg-gray-100">12</button>
-                            </div>
-                            <button className="p-2 rounded-lg hover:bg-gray-100">
-                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                </svg>
-                            </button>
-                        </nav>
-                    </div>
-                )}
-
-                {/* Image Modal */}
-                <AnimatePresence>
-                    {selectedImage && (
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            onClick={() => setSelectedImage(null)}
-                            className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
-                        >
-                            <div className="relative max-w-4xl max-h-[90vh]">
-                                <Image
-                                    src={selectedImage}
-                                    alt="Review image"
-                                    width={800}
-                                    height={600}
-                                    className="object-contain rounded-lg"
-                                />
-                            </div>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
+                <ReviewModal
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    onSubmit={handleReviewSubmit}
+                />
             </div>
-            <ReviewModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                onSubmit={handleReviewSubmit}
-            />
+            {/* Image Modal */}
+            <AnimatePresence>
+                {selectedImage && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        onClick={() => setSelectedImage(null)}
+                        className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+                    >
+                        <div className="relative max-w-4xl max-h-[90vh]">
+                            <Image
+                                src={selectedImage}
+                                alt="Review image"
+                                width={800}
+                                height={600}
+                                className="object-contain rounded-lg"
+                            />
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 };

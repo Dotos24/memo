@@ -1,7 +1,7 @@
 "use client"
-import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'framer-motion';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import useEmblaCarousel from 'embla-carousel-react';
-import { useRef, useEffect, useState, useCallback } from 'react';
+import { useRef, useState, useCallback } from 'react';
 import Image from 'next/image';
 import { FiHeart, FiUsers, FiSmile, FiGlobe, FiChevronLeft, FiChevronRight, FiX } from 'react-icons/fi';
 
@@ -274,7 +274,7 @@ const AboutPage = () => {
                     >
                         <h2 className="text-4xl font-bold mb-8">Наші цінності</h2>
                         <p className="text-xl text-gray-300 mb-12">
-                            Ми віримо в силу людських зв'язків та прагнемо зробити світ трохи кращим 
+                            Ми віримо в силу людських зв&apos;язків та прагнемо зробити світ трохи кращим 
                             через meaningful conversations та якісне спілкування.
                         </p>
                         <motion.button
