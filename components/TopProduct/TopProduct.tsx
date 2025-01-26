@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Image from 'next/image';
 import { FiShoppingCart, FiHeart, FiStar } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -75,9 +75,10 @@ const containerVariants = {
     visible: {
         opacity: 1,
         transition: {
-            staggerChildren: 0.15
+            staggerChildren: 0.1
         }
-    }
+    },
+    exit: { opacity: 0 }
 };
 
 const itemVariants = {
@@ -96,15 +97,23 @@ export default function TopProduct() {
     const [activeCategory, setActiveCategory] = useState<ProductCategory>('all');
     const router = useRouter();
 
-    const categories = [
-        { id: 'all', label: 'Всі' },
-        { id: 'hits', label: 'Хіти Продажу' },
-        { id: 'new', label: 'Новинки' },
-    ];
+    const filteredProducts = useMemo(() => {
+        if (activeCategory === 'all') {
+            return products;
+        }
+        return products.filter(product => product.category.includes(activeCategory));
+    }, [activeCategory]);
 
-    const filteredProducts = products.filter(product =>
-        activeCategory === 'all' ? true : product.category.includes(activeCategory)
-    );
+    useEffect(() => {
+        console.log('Active Category:', activeCategory);
+        console.log('Filtered Products:', filteredProducts);
+    }, [activeCategory, filteredProducts]);
+
+    const categories = [
+        { id: 'all' as ProductCategory, label: 'Всі' },
+        { id: 'hits' as ProductCategory, label: 'Хіти Продажу' },
+        { id: 'new' as ProductCategory, label: 'Новинки' },
+    ];
 
     return (
         <motion.div
@@ -127,7 +136,7 @@ export default function TopProduct() {
                         {categories.map((category) => (
                             <button
                                 key={category.id}
-                                onClick={() => setActiveCategory(category.id as ProductCategory)}
+                                onClick={() => setActiveCategory(category.id)}
                                 className={`px-6 py-2 rounded-lg text-sm font-medium transition-all ${
                                     activeCategory === category.id
                                         ? 'bg-white dark:bg-gray-700 shadow-sm'
@@ -149,16 +158,20 @@ export default function TopProduct() {
 
             <AnimatePresence mode="wait">
                 <motion.div
-                    className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
+                    key={activeCategory}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.3 }}
+                    className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4"
                 >
                     {filteredProducts.map((product) => (
                         <motion.div
                             key={product.id}
                             layout
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
                             variants={itemVariants}
                             className="bg-white dark:bg-gray-800 rounded-xl p-3 shadow-sm hover:shadow-md transition-shadow"
                         >
