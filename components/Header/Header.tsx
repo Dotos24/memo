@@ -54,19 +54,20 @@ const ListItem = React.forwardRef<
   return (
     <li>
       <NavigationMenuLink asChild>
-        <a
+        <Link
           ref={ref}
+          href="/catalog"
           className={cn(
             "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-gray-100",
             className
-          )} 
+          )}
           {...props}
         >
           <div className="text-sm font-medium leading-none">{title}</div>
           <p className="line-clamp-2 text-sm leading-snug text-gray-500 mt-1">
             {children}
           </p>
-        </a>
+        </Link>
       </NavigationMenuLink>
     </li>
   )
@@ -176,9 +177,10 @@ const Header = () => {
   }, [searchValue])
 
   const menuItems = [
-    { title: 'Набори', href: '/sets' },
-    { title: 'Про нас', href: '/about' },
-    { title: 'FAQ', href: '/cooperation' },
+    { id: 'sets', title: 'Набори', href: '/catalog' },
+    { id: 'about', title: 'Про нас', href: '/about' },
+    { id: 'faq', title: 'Співпраця', href: '/cooperation' },
+    { id: 'reviews', title: 'Відгуки', href: '/reviews' },
   ]
 
   return (
@@ -217,7 +219,7 @@ const Header = () => {
                         <ul className="grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
                           <li className="row-span-3">
                             <NavigationMenuLink asChild>
-                              <a className="flex h-full w-full select-none flex-col justify-end rounded-md p-6 no-underline outline-none focus:shadow-md relative overflow-hidden group">
+                              <Link href="/catalog" className="flex h-full w-full select-none flex-col justify-end rounded-md p-6 no-underline outline-none focus:shadow-md relative overflow-hidden group">
                                 <div className="absolute inset-0 bg-[url('/test.png')] bg-cover bg-center transition-transform duration-300 group-hover:scale-110" />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/20" />
                                 <div className="relative z-10">
@@ -228,17 +230,17 @@ const Header = () => {
                                     Найкращі ігри для особливих моментів та незабутніх вражень
                                   </p>
                                 </div>
-                              </a>
+                              </Link>
                             </NavigationMenuLink>
                           </li>
-                          <ListItem href="/friends" title="Друзям">
-                          Настільні ігри для веселих посиденьок з друзями.
+                          <ListItem key="menu-friends" href="/catalog" title="Друзям">
+                            Настільні ігри для веселих посиденьок з друзями.
                           </ListItem>
-                          <ListItem href="/couples" title="Парам">
-                          Ігри для романтичного вечора вдвох
+                          <ListItem key="menu-couples" href="/catalog" title="Парам">
+                            Ігри для романтичного вечора вдвох
                           </ListItem>
-                          <ListItem href="/family" title="Сім'ї">
-                          Сімейні ігри для всіх вікових категорій
+                          <ListItem key="menu-family" href="/catalog" title="Сім'ї">
+                            Сімейні ігри для всіх вікових категорій
                           </ListItem>
                         </ul>
                       </NavigationMenuContent>
@@ -247,23 +249,23 @@ const Header = () => {
                       <NavigationMenuTrigger className="text-[14px] font-medium text-gray-600">Для розвитку</NavigationMenuTrigger>
                       <NavigationMenuContent>
                         <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-                          <ListItem href="/single" title="Для одного">
-                          Індивідуальні розвиваючі ігри
+                          <ListItem key="menu-single" href="/catalog" title="Для одного">
+                            Індивідуальні розвиваючі ігри
                           </ListItem>
-                          <ListItem href="/development" title="Розвиваючі">
-                          Ігри для розвитку пам'яті та мислення
+                          <ListItem key="menu-development" href="/catalog" title="Розвиваючі">
+                            Ігри для розвитку пам'яті та мислення
                           </ListItem>
-                          <ListItem href="/conversation" title="Розмовні ігри">
-                          Ігри для покращення комунікації
+                          <ListItem key="menu-conversation" href="/catalog" title="Розмовні ігри">
+                            Ігри для покращення комунікації
                           </ListItem>
-                          <ListItem href="/logic" title="Логічні ігри">
-                          Ігри для розвитку логічного мислення
+                          <ListItem key="menu-logic" href="/catalog" title="Логічні ігри">
+                            Ігри для розвитку логічного мислення
                           </ListItem>
                         </ul>
                       </NavigationMenuContent>
                     </NavigationMenuItem>
                     {menuItems.map((item) => (
-                      <NavigationMenuItem key={item.href}>
+                      <NavigationMenuItem key={item.id}>
                         <Link
                           href={item.href}
                           className={`px-3 py-2 rounded-md text-[14px] font-medium transition-colors

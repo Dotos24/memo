@@ -31,6 +31,18 @@ interface ReviewsProps {
     showAll?: boolean;
 }
 
+const commentVariants = {
+    hidden: { opacity: 0, scale: 0.95 },
+    visible: {
+        opacity: 1,
+        scale: 1,
+        transition: {
+            duration: 0.5,
+            ease: "easeOut"
+        }
+    }
+};
+
 export const Reviews = ({ showAll = false }: ReviewsProps) => {
     const [selectedTab, setSelectedTab] = useState<'all' | 'photo' | 'video'>('all');
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -109,7 +121,13 @@ export const Reviews = ({ showAll = false }: ReviewsProps) => {
     const displayedReviews = showAll ? reviews : reviews.slice(0, 6);
 
     return (
-        <div className="bg-white dark:bg-gray-900 py-16">
+        <motion.div 
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="bg-white dark:bg-gray-900 py-16"
+        >
             <div className="container mx-auto px-4">
                 {/* Header - показываем только на странице продукта */}
                 {!showAll && (
@@ -179,14 +197,21 @@ export const Reviews = ({ showAll = false }: ReviewsProps) => {
                     </button>
                 </div>
 
-                {/* Reviews Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {displayedReviews.map((review) => (
+                {/* Updated Reviews Grid для горизонтального отображения */}
+                <motion.div 
+                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                    initial={{ y: 30, opacity: 0 }}
+                    whileInView={{ y: 0, opacity: 1 }}
+                    viewport={{ once: true }}
+                >
+                    {displayedReviews.map((review, index) => (
                         <motion.div
                             key={review.id}
                             initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm border border-gray-100"
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: index * 0.1 }}
+                            className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100"
                         >
                             <div className="flex items-start justify-between mb-3">
                                 <div className="flex items-center gap-3">
@@ -253,7 +278,7 @@ export const Reviews = ({ showAll = false }: ReviewsProps) => {
                             </div>
                         </motion.div>
                     ))}
-                </div>
+                </motion.div>
                 <ReviewModal
                     isOpen={isModalOpen}
                     onClose={() => setIsModalOpen(false)}
@@ -282,7 +307,7 @@ export const Reviews = ({ showAll = false }: ReviewsProps) => {
                     </motion.div>
                 )}
             </AnimatePresence>
-        </div>
+        </motion.div>
     );
 };
 
