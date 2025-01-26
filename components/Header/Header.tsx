@@ -40,7 +40,7 @@ const searchResults: SearchItem[] = [
   {
     id: 2,
     title: "Між Нами: Kids",
-    image: "/між_нами_kids-1-300x300.webp",
+    image: "/між_нами_kids-1-1024x1024.webp",
     price: 649,
     oldPrice: 749,
     slug: "mizh-namy-pro-vidnosyny"
