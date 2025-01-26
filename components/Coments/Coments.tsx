@@ -126,7 +126,7 @@ export const Reviews = ({ showAll = false }: ReviewsProps) => {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="bg-white dark:bg-gray-900 py-16"
+            className="bg-gray-900/5 py-16"
         >
             <div className="container mx-auto px-4">
                 {/* Header - показываем только на странице продукта */}

@@ -5,6 +5,9 @@ import Image from 'next/image';
 import { FiShoppingCart, FiHeart, FiStar } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+
+
 
 type ProductCategory = 'hits' | 'new' | 'all';
 
@@ -155,72 +158,73 @@ export default function TopProduct() {
                     </button>   
                 </div>
             </div>
-
-            <AnimatePresence mode="wait">
-                <motion.div
-                    key={activeCategory}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.3 }}
-                    className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4"
-                >
-                    {filteredProducts.map((product) => (
-                        <motion.div
-                            key={product.id}
-                            layout
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            variants={itemVariants}
-                            className="bg-white dark:bg-gray-800 rounded-xl p-3 shadow-sm hover:shadow-md transition-shadow"
-                        >
-                            <div className="relative aspect-square mb-3 rounded-lg overflow-hidden">
-                                <Image
-                                    src={product.image}
-                                    alt={product.title}
-                                    fill
-                                    className="object-cover"
-                                />
-                                <button className="absolute top-2 right-2 p-1.5 bg-white/90 rounded-full hover:bg-white transition-colors">
-                                    <FiHeart className="w-4 h-4" />
-                                </button>
-                            </div>
-
-                            <div className="space-y-1.5">
-                                <h3 className="font-medium text-base dark:text-white">{product.title}</h3>
-
-                                <div className="flex items-center gap-1.5">
-                                    <div className="flex items-center">
-                                        {[...Array(product.rating)].map((_, i) => (
-                                            <FiStar key={i} className="w-3.5 h-3.5 text-yellow-400 fill-current" />
-                                        ))}
-                                    </div>
-                                    <span className="text-xs text-gray-500 dark:text-gray-400">
-                                        {product.reviews} відгуків
-                                    </span>
-                                </div>
-
-                                <div className="flex items-center justify-between">
-                                    <div className="flex items-baseline gap-1.5">
-                                        <span className="text-base font-bold dark:text-white">
-                                            {product.price} ₴
-                                        </span>
-                                        {product.oldPrice && (
-                                            <span className="text-xs text-gray-500 line-through">
-                                                {product.oldPrice} ₴
-                                            </span>
-                                        )}
-                                    </div>
-                                    <button className="p-1.5 bg-black text-white rounded-lg hover:bg-gray-900 transition-colors dark:bg-white dark:text-black">
-                                        <FiShoppingCart className="w-4 h-4" />
+            <Link href="/product">
+                <AnimatePresence mode="wait">
+                    <motion.div
+                        key={activeCategory}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ duration: 0.3 }}
+                        className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4"
+                    >
+                        {filteredProducts.map((product) => (
+                            <motion.div
+                                key={product.id}
+                                layout
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                variants={itemVariants}
+                                className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 p-3 transition-all hover:border-[#A7AA2E]"
+                            >
+                                <div className="relative aspect-square mb-3 rounded-lg overflow-hidden">
+                                    <Image
+                                        src={product.image}
+                                        alt={product.title}
+                                        fill
+                                        className="object-cover"
+                                    />
+                                    <button className="absolute top-2 right-2 p-1.5 bg-white/90 rounded-full hover:bg-white transition-colors border border-gray-100">
+                                        <FiHeart className="w-4 h-4" />
                                     </button>
                                 </div>
-                            </div>
-                        </motion.div>
-                    ))}
-                </motion.div>
-            </AnimatePresence>
+
+                                <div className="space-y-1.5">
+                                    <h3 className="font-medium text-base dark:text-white">{product.title}</h3>
+
+                                    <div className="flex items-center gap-1.5">
+                                        <div className="flex items-center">
+                                            {[...Array(product.rating)].map((_, i) => (
+                                                <FiStar key={i} className="w-3.5 h-3.5 text-yellow-400 fill-current" />
+                                            ))}
+                                        </div>
+                                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                                            {product.reviews} відгуків
+                                        </span>
+                                    </div>
+
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-baseline gap-1.5">
+                                            <span className="text-base font-bold dark:text-white">
+                                                {product.price} ₴
+                                            </span>
+                                            {product.oldPrice && (
+                                                <span className="text-xs text-gray-500 line-through">
+                                                    {product.oldPrice} ₴
+                                                </span>
+                                            )}
+                                        </div>
+                                        <button className="p-1.5 bg-black text-white rounded-lg hover:bg-gray-900 transition-colors dark:bg-white dark:text-black">
+                                            <FiShoppingCart className="w-4 h-4" />
+                                        </button>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        ))}
+                    </motion.div>
+                </AnimatePresence>
+            </Link>
         </motion.div>
     );
 }
