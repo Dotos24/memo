@@ -288,43 +288,67 @@ const AboutPage = () => {
                 </div>
             </section>
 
-            {/* Fullscreen Modal */}
+            {/* Updated Fullscreen Modal */}
             <AnimatePresence>
                 {fullscreenImage && (
                     <motion.div 
-                        className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75"
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/95"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
+                        onClick={() => setFullscreenImage(null)}
                     >
-                        <div className="relative w-full max-w-4xl mx-auto p-4">
+                        <motion.div 
+                            className="relative w-screen h-screen max-w-[1920px] max-h-[1080px] p-4"
+                            onClick={e => e.stopPropagation()}
+                            initial={{ scale: 0.9 }}
+                            animate={{ scale: 1 }}
+                            exit={{ scale: 0.9 }}
+                        >
                             <button 
-                                className="absolute top-4 right-4 text-white text-2xl"
+                                className="absolute top-4 right-4 z-10 text-white p-2 rounded-full hover:bg-white/10 transition-colors"
                                 onClick={() => setFullscreenImage(null)}
                             >
-                                <FiX />
+                                <FiX size={32} />
                             </button>
-                            <Image
-                                src={fullscreenImage}
-                                alt="Fullscreen"
-                                fill
-                                className="object-contain"
-                            />
-                            <div className="absolute inset-0 flex items-center justify-between p-4">
+
+                            <div className="relative w-full h-full">
+                                <Image
+                                    src={fullscreenImage}
+                                    alt="Fullscreen view"
+                                    fill
+                                    sizes="(max-width: 1920px) 100vw, 1920px"
+                                    quality={100}
+                                    priority
+                                    className="object-contain"
+                                />
+                            </div>
+
+                            <div className="absolute inset-x-4 top-1/2 -translate-y-1/2 flex justify-between">
                                 <button 
-                                    onClick={() => setCurrentImageIndex((currentImageIndex - 1 + teamMembers.length) % teamMembers.length)}
-                                    className="text-white text-2xl"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        const newIndex = (currentImageIndex - 1 + teamMembers.length) % teamMembers.length;
+                                        setCurrentImageIndex(newIndex);
+                                        setFullscreenImage(teamMembers[newIndex].image);
+                                    }}
+                                    className="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300 flex items-center justify-center text-white"
                                 >
-                                    <FiChevronLeft />
+                                    <FiChevronLeft size={24} />
                                 </button>
                                 <button 
-                                    onClick={() => setCurrentImageIndex((currentImageIndex + 1) % teamMembers.length)}
-                                    className="text-white text-2xl"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        const newIndex = (currentImageIndex + 1) % teamMembers.length;
+                                        setCurrentImageIndex(newIndex);
+                                        setFullscreenImage(teamMembers[newIndex].image);
+                                    }}
+                                    className="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300 flex items-center justify-center text-white"
                                 >
-                                    <FiChevronRight />
+                                    <FiChevronRight size={24} />
                                 </button>
                             </div>
-                        </div>
+                        </motion.div>
                     </motion.div>
                 )}
             </AnimatePresence>
