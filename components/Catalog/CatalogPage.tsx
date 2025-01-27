@@ -1,5 +1,5 @@
 "use client"
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { FiFilter, FiGrid, FiList, FiChevronDown, FiHeart, FiShoppingCart, FiX, FiChevronUp } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -520,10 +520,6 @@ export default function CatalogPage() {
         setViewType(type);
     };
 
-    const handlePriceChange = (values: number[]) => {
-        setPriceRange({ min: values[0], max: values[1] });
-    };
-
     const [selectedFilters, setSelectedFilters] = useState<{[key: string]: string[]}>({
         status: [],
         type: [],
@@ -535,7 +531,7 @@ export default function CatalogPage() {
     const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
     
     // Функция фильтрации
-    const applyFilters = () => {
+    const applyFilters = useCallback(() => {
         let result = [...products];
 
         // Фильтрация по статусу (в наличии/нет в наличии)
@@ -582,7 +578,7 @@ export default function CatalogPage() {
         }
 
         setFilteredProducts(result);
-    };
+    }, [selectedFilters, priceRange, sortBy]); // Добавляем зависимости
 
     // Применяем фильтры при изменении любого из параметров
     useEffect(() => {
