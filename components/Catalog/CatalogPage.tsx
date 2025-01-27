@@ -187,7 +187,7 @@ interface MobileFiltersModalProps {
     isOpen: boolean;
     onClose: () => void;
     filterSections: FilterSection[];
-    setFilterSections: (sections: FilterSection[]) => void;
+    setFilterSections: React.Dispatch<React.SetStateAction<FilterSection[]>>;
     selectedFilters: {[key: string]: string[]};
     handleFilterSelect: (type: string, id: string) => void;
     filterData: FilterData;
@@ -440,69 +440,77 @@ const MobileFiltersModal = ({
 }: MobileFiltersModalProps) => {
     if (!isOpen) return null;
 
-    const totalFilters = Object.values(selectedFilters).reduce((acc, arr) => acc + arr.length, 0);
+    const toggleSection = (sectionId: string) => {
+        setFilterSections(prev => 
+            prev.map(s => 
+                s.id === sectionId 
+                    ? { ...s, isOpen: !s.isOpen }
+                    : s
+            )
+        );
+    };
 
     return (
-        <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 z-50"
-        >
-            <motion.div
-                initial={{ x: '100%' }}
-                animate={{ x: 0 }}
-                exit={{ x: '100%' }}
-                className="absolute right-0 top-0 bottom-0 w-full max-w-[400px] bg-white"
-            >
-                <div className="flex items-center justify-between p-4 border-b">
-                    <h2 className="text-lg font-medium">Фільтри</h2>
-                    <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-lg">
-                        <FiX size={20} />
-                    </button>
-                </div>
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
+            <div className="fixed inset-y-0 right-0 max-w-full flex">
+                <div className="w-screen max-w-md">
+                    <div className="h-full flex flex-col bg-white shadow-xl">
+                        {/* Header */}
+                        <div className="flex items-center justify-between px-4 py-6 border-b">
+                            <h2 className="text-lg font-medium">Фільтри</h2>
+                            <button
+                                onClick={onClose}
+                                className="rounded-md text-gray-400 hover:text-gray-500 focus:outline-none"
+                            >
+                                <FiX className="h-6 w-6" />
+                            </button>
+                        </div>
 
-                <div className="overflow-y-auto h-[calc(100vh-180px)] p-4 space-y-4">
-                    {filterSections.map((section) => (
-                        <FilterSection
-                            key={section.id}
-                            title={section.title}
-                            isOpen={section.isOpen}
-                            onToggle={() => {
-                                setFilterSections((prev: FilterSection[]) => 
-                                    prev.map(s => 
-                                        s.id === section.id 
-                                            ? { ...s, isOpen: !s.isOpen }
-                                            : s
-                                    )
-                                );
-                            }}
-                            type={section.id}
-                            selectedFilters={selectedFilters}
-                            handleFilterSelect={handleFilterSelect}
-                            filterData={filterData}
-                        />
-                    ))}
-                </div>
+                        {/* Filter Sections */}
+                        <div className="flex-1 py-6 overflow-y-auto px-4">
+                            <div className="space-y-4">
+                                {filterSections.map(section => (
+                                    <div key={section.id}>
+                                        <button
+                                            className="w-full flex justify-between items-center py-2"
+                                            onClick={() => toggleSection(section.id)}
+                                        >
+                                            <span className="font-medium">{section.title}</span>
+                                            <FiChevronDown
+                                                className={`transform transition-transform ${
+                                                    section.isOpen ? 'rotate-180' : ''
+                                                }`}
+                                            />
+                                        </button>
+                                        {section.isOpen && (
+                                            <div className="mt-2">
+                                                <FilterSection
+                                                    type={section.id}
+                                                    selectedFilters={selectedFilters}
+                                                    handleFilterSelect={handleFilterSelect}
+                                                    filterData={filterData} title={''} isOpen={false} onToggle={function (): void {
+                                                        throw new Error('Function not implemented.');
+                                                    } }                                                />
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
 
-                <div className="absolute bottom-0 left-0 right-0 p-4 border-t bg-white">
-                    <div className="flex gap-3">
-                        <button
-                            onClick={clearFilters}
-                            className="flex-1 px-6 py-3 border border-gray-200 rounded-xl"
-                        >
-                            Очистити
-                        </button>
-                        <button
-                            onClick={onClose}
-                            className="flex-1 px-6 py-3 bg-black text-white rounded-xl"
-                        >
-                            Показати {totalFilters > 0 ? `(${totalFilters})` : ''}
-                        </button>
+                        {/* Footer */}
+                        <div className="border-t border-gray-200 px-4 py-6">
+                            <button
+                                onClick={clearFilters}
+                                className="w-full px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md"
+                            >
+                                Очистити всі фільтри
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </motion.div>
-        </motion.div>
+            </div>
+        </div>
     );
 };
 
@@ -519,8 +527,8 @@ export default function CatalogPage() {
     ]);
 
     const toggleFilterSection = (sectionId: string) => {
-        setFilterSections(prevSections => 
-            prevSections.map(section => 
+        setFilterSections(prev => 
+            prev.map(section => 
                 section.id === sectionId 
                     ? { ...section, isOpen: !section.isOpen }
                     : section
