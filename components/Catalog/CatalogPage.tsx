@@ -520,7 +520,7 @@ export default function CatalogPage() {
         setViewType(type);
     };
 
-    const handlePriceRangeChange = (values: number[]) => {
+    const handlePriceChange = (values: number[]) => {
         setPriceRange({ min: values[0], max: values[1] });
     };
 
@@ -587,7 +587,7 @@ export default function CatalogPage() {
     // Применяем фильтры при изменении любого из параметров
     useEffect(() => {
         applyFilters();
-    }, [selectedFilters, priceRange, sortBy]);
+    }, [selectedFilters, priceRange, sortBy, applyFilters]);
 
     const handleFilterSelect = (type: string, id: string) => {
         setSelectedFilters(prev => ({

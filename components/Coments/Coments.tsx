@@ -192,7 +192,7 @@ export const Reviews = ({ showAll = false }: ReviewsProps) => {
                     whileInView={{ y: 0, opacity: 1 }}
                     viewport={{ once: true }}
                 >
-                    {displayedReviews.map((review, index) => (
+                    {displayedReviews.map((review) => (
                         <motion.div
                             key={review.id}
                             initial={{ opacity: 0, y: 20 }}
