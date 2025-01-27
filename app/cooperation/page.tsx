@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { FiMail, FiMessageCircle, FiPackage, FiGift, FiSend } from 'react-icons/fi';
+import { FiSend } from 'react-icons/fi';
 import Header from '@/components/Header/Header';
 import Footer from '@/components/Footer/Footer';
 import Support from '@/components/Support/Support';

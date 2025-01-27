@@ -108,7 +108,30 @@ const playerCount = [
     { id: '6+', name: '6+ гравців', count: 8 },
 ];
 
-const filterData = {
+interface FilterData {
+    categories: Array<{id: string; name: string; count: number}>;
+    availability: Array<{id: string; name: string; count: number}>;
+    playerCount: Array<{id: string; name: string; count: number}>;
+    status: Array<{id: string; name: string; count: number}>;
+    priceRange: {
+        min: number;
+        max: number;
+        current: number[];
+        ranges: Array<{
+            id: string;
+            name: string;
+            count: number;
+        }>;
+    };
+    type: Array<{id: string; name: string; count: number}>;
+    age: Array<{id: string; name: string; count: number}>;
+    duration: Array<{id: string; name: string; count: number}>;
+}
+
+const filterData: FilterData = {
+    categories,
+    availability,
+    playerCount,
     status: [
         { id: 'in-stock', name: 'В наявності', count: 42 },
         { id: 'out-stock', name: 'Немає в наявності', count: 5 },
@@ -130,12 +153,6 @@ const filterData = {
         { id: 'party', name: 'Для вечірок', count: 12 },
         { id: 'card', name: 'Карткова', count: 8 },
         { id: 'strategy', name: 'Стратегія', count: 6 },
-    ],
-    playerCount: [
-        { id: '2', name: '2 гравці', count: 15 },
-        { id: '2-4', name: '2-4 гравці', count: 20 },
-        { id: '4-6', name: '4-6 гравців', count: 12 },
-        { id: '6+', name: '6+ гравців', count: 8 },
     ],
     age: [
         { id: '3-5', name: '3-5 років', count: 5 },
@@ -173,7 +190,7 @@ interface MobileFiltersModalProps {
     setFilterSections: (sections: FilterSection[]) => void;
     selectedFilters: {[key: string]: string[]};
     handleFilterSelect: (type: string, id: string) => void;
-    filterData: any;
+    filterData: FilterData;
     clearFilters: () => void;
 }
 
@@ -291,7 +308,7 @@ const FilterSection = ({
     type: string;
     selectedFilters: {[key: string]: string[]};
     handleFilterSelect: (type: string, id: string) => void;
-    filterData: any;
+    filterData: FilterData;
 }) => {
     const getContent = () => {
         if (type === 'price') {

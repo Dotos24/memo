@@ -1,7 +1,7 @@
 "use client"
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
-import { FiX, FiMinus, FiPlus, FiShoppingBag } from 'react-icons/fi';
+import { FiX, FiMinus, FiPlus } from 'react-icons/fi';
 
 interface CartItem {
     id: number;
