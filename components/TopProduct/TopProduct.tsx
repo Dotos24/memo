@@ -7,8 +7,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
-
-
 type ProductCategory = 'hits' | 'new' | 'all';
 
 interface Product {
@@ -124,23 +122,23 @@ export default function TopProduct() {
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
             variants={containerVariants}
-            className="container mx-auto py-16 px-4"
+            className="container mx-auto py-8 sm:py-16 px-4"
         >
             <motion.h2 
                 variants={itemVariants}
-                className="text-3xl font-bold text-center mb-12"
+                className="text-2xl sm:text-3xl font-bold text-center mb-8 sm:mb-12"
             >
                 Популярні ігри
             </motion.h2>
 
-            <div className="mb-8">
-                <div className='flex justify-between items-center'>
-                    <div className="flex justify-center space-x-2 bg-gray-100 dark:bg-gray-800 p-1 rounded-xl inline-flex">
+            <div className="mb-6 sm:mb-8">
+                <div className='flex flex-col sm:flex-row gap-4 sm:gap-0 sm:justify-between sm:items-center'>
+                    <div className="flex justify-start sm:justify-center overflow-x-auto sm:overflow-visible space-x-2 bg-gray-100 dark:bg-gray-800 p-1 rounded-xl">
                         {categories.map((category) => (
                             <button
                                 key={category.id}
                                 onClick={() => setActiveCategory(category.id)}
-                                className={`px-6 py-2 rounded-lg text-sm font-medium transition-all ${
+                                className={`px-4 sm:px-6 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
                                     activeCategory === category.id
                                         ? 'bg-white dark:bg-gray-700 shadow-sm'
                                         : 'hover:bg-white/50 dark:hover:bg-gray-700/50'
@@ -152,7 +150,7 @@ export default function TopProduct() {
                     </div>
                     <button
                         onClick={() => router.push('/catalog')}
-                        className="px-6 py-3 bg-black text-white rounded-xl hover:bg-gray-900 transition-all"
+                        className="w-full sm:w-auto px-6 py-3 bg-black text-white rounded-xl hover:bg-gray-900 transition-all text-sm sm:text-base"
                     >
                         Перейти до всіх
                     </button>   
@@ -166,7 +164,7 @@ export default function TopProduct() {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}
                         transition={{ duration: 0.3 }}
-                        className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4"
+                        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4"
                     >
                         {filteredProducts.map((product) => (
                             <motion.div
@@ -176,9 +174,9 @@ export default function TopProduct() {
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
                                 variants={itemVariants}
-                                className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 p-3 transition-all hover:border-[#A7AA2E]"
+                                className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 p-2 sm:p-3 transition-all hover:border-[#A7AA2E]"
                             >
-                                <div className="relative aspect-square mb-3 rounded-lg overflow-hidden">
+                                <div className="relative aspect-square mb-2 sm:mb-3 rounded-lg overflow-hidden">
                                     <Image
                                         src={product.image}
                                         alt={product.title}
@@ -186,37 +184,37 @@ export default function TopProduct() {
                                         className="object-cover"
                                     />
                                     <button className="absolute top-2 right-2 p-1.5 bg-white/90 rounded-full hover:bg-white transition-colors border border-gray-100">
-                                        <FiHeart className="w-4 h-4" />
+                                        <FiHeart className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
                                     </button>
                                 </div>
 
-                                <div className="space-y-1.5">
-                                    <h3 className="font-medium text-base dark:text-white">{product.title}</h3>
+                                <div className="space-y-1 sm:space-y-1.5">
+                                    <h3 className="font-medium text-sm sm:text-base dark:text-white line-clamp-2">{product.title}</h3>
 
                                     <div className="flex items-center gap-1.5">
                                         <div className="flex items-center">
                                             {[...Array(product.rating)].map((_, i) => (
-                                                <FiStar key={i} className="w-3.5 h-3.5 text-yellow-400 fill-current" />
+                                                <FiStar key={i} className="w-3 sm:w-3.5 h-3 sm:h-3.5 text-yellow-400 fill-current" />
                                             ))}
                                         </div>
-                                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                                        <span className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400">
                                             {product.reviews} відгуків
                                         </span>
                                     </div>
 
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-baseline gap-1.5">
-                                            <span className="text-base font-bold dark:text-white">
+                                            <span className="text-sm sm:text-base font-bold dark:text-white">
                                                 {product.price} ₴
                                             </span>
                                             {product.oldPrice && (
-                                                <span className="text-xs text-gray-500 line-through">
+                                                <span className="text-[10px] sm:text-xs text-gray-500 line-through">
                                                     {product.oldPrice} ₴
                                                 </span>
                                             )}
                                         </div>
                                         <button className="p-1.5 bg-black text-white rounded-lg hover:bg-gray-900 transition-colors dark:bg-white dark:text-black">
-                                            <FiShoppingCart className="w-4 h-4" />
+                                            <FiShoppingCart className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
                                         </button>
                                     </div>
                                 </div>

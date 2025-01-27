@@ -166,6 +166,323 @@ const sortOptions = [
     { value: 'reviews', label: 'За відгуками' },
 ];
 
+interface MobileFiltersModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+    filterSections: FilterSection[];
+    setFilterSections: (sections: FilterSection[]) => void;
+    selectedFilters: {[key: string]: string[]};
+    handleFilterSelect: (type: string, id: string) => void;
+    filterData: any;
+    clearFilters: () => void;
+}
+
+interface PriceRangeFilterProps {
+    range: {
+        min: number;
+        max: number;
+        current: number[];
+        ranges: Array<{
+            id: string;
+            name: string;
+            count: number;
+        }>;
+    };
+    onChange: (values: number[]) => void;
+}
+
+// Перемещаем PriceRangeFilter до его использования
+const PriceRangeFilter = ({ range, onChange }: PriceRangeFilterProps) => {
+    const [values, setValues] = useState(range.current);
+
+    const handleChange = (newValues: number[]) => {
+        setValues(newValues);
+        onChange?.(newValues);
+    };
+
+    return (
+        <div className="space-y-6">
+            {/* Range Slider */}
+            <div className="px-2 py-3">
+                <Slider
+                    range
+                    min={range.min}
+                    max={range.max}
+                    value={values}
+                    onChange={handleChange}
+                    trackStyle={[{ backgroundColor: 'black' }]}
+                    handleStyle={[
+                        { 
+                            borderColor: 'black',
+                            backgroundColor: 'white',
+                            boxShadow: '0 0 0 2px black',
+                            opacity: 1
+                        },
+                        { 
+                            borderColor: 'black',
+                            backgroundColor: 'white',
+                            boxShadow: '0 0 0 2px black',
+                            opacity: 1
+                        }
+                    ]}
+                    railStyle={{ backgroundColor: '#E5E7EB' }}
+                />
+            </div>
+
+            {/* Price Inputs */}
+            <div className="flex items-center gap-3">
+                <div className="relative flex-1">
+                    <input 
+                        type="number"
+                        value={values[0]}
+                        onChange={(e) => handleChange([Number(e.target.value), values[1]])}
+                        className="w-full pl-3 pr-8 py-2 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-black focus:border-transparent"
+                    />
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">₴</span>
+                </div>
+                <span className="text-gray-400">—</span>
+                <div className="relative flex-1">
+                    <input 
+                        type="number"
+                        value={values[1]}
+                        onChange={(e) => handleChange([values[0], Number(e.target.value)])}
+                        className="w-full pl-3 pr-8 py-2 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-black focus:border-transparent"
+                    />
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">₴</span>
+                </div>
+            </div>
+
+            {/* Predefined Ranges */}
+            <div className="space-y-2">
+                {range.ranges.map((item) => (
+                    <button
+                        key={item.id}
+                        onClick={() => {
+                            const [min, max] = item.id === 'under-500' 
+                                ? [0, 500] 
+                                : item.id === 'over-1500'
+                                    ? [1500, range.max]
+                                    : item.id.split('-').map(Number);
+                            handleChange([min, max]);
+                        }}
+                        className="w-full px-3 py-2 text-sm text-left rounded-xl transition-colors hover:bg-gray-100 flex items-center justify-between"
+                    >
+                        <span>{item.name}</span>
+                        <span className="text-gray-400 text-xs">{item.count}</span>
+                    </button>
+                ))}
+            </div>
+        </div>
+    );
+};
+
+const FilterSection = ({ 
+    title, 
+    isOpen, 
+    onToggle, 
+    type,
+    selectedFilters,
+    handleFilterSelect,
+    filterData 
+}: { 
+    title: string;
+    isOpen: boolean;
+    onToggle: () => void;
+    type: string;
+    selectedFilters: {[key: string]: string[]};
+    handleFilterSelect: (type: string, id: string) => void;
+    filterData: any;
+}) => {
+    const getContent = () => {
+        if (type === 'price') {
+            return (
+                <PriceRangeFilter 
+                    range={filterData.priceRange} 
+                    onChange={(values) => {
+                        console.log('Price range changed:', values);
+                    }} 
+                />
+            );
+        }
+
+        // Get the correct data based on type
+        let filterItems;
+        switch(type) {
+            case 'status':
+                filterItems = filterData.status;
+                break;
+            case 'type':
+                filterItems = filterData.type;
+                break;
+            case 'players':
+                filterItems = filterData.playerCount;
+                break;
+            case 'age':
+                filterItems = filterData.age;
+                break;
+            case 'duration':
+                filterItems = filterData.duration;
+                break;
+            default:
+                filterItems = [];
+        }
+
+        return (
+            <div className="flex flex-wrap gap-2">
+                {filterItems.map((item) => {
+                    const isSelected = selectedFilters[type]?.includes(item.id);
+                    return (
+                        <button
+                            key={item.id}
+                            onClick={() => handleFilterSelect(type, item.id)}
+                            className={`px-4 py-2 text-sm font-medium rounded-xl transition-all duration-200
+                                flex items-center gap-2 
+                                ${isSelected 
+                                    ? 'bg-[#A7AA2E] text-white border-transparent shadow-md hover:bg-[#959827]' 
+                                    : 'border border-gray-200 hover:border-[#A7AA2E] hover:text-[#A7AA2E]'
+                                }`}
+                        >
+                            <span>{item.name}</span>
+                            <span className={`text-xs ${isSelected ? 'text-white/80' : 'text-gray-400'}`}>
+                                ({item.count})
+                            </span>
+                        </button>
+                    );
+                })}
+            </div>
+        );
+    };
+
+    return (
+        <div className="group border border-gray-200/60 bg-gray-50/30 rounded-xl">
+            <div 
+                className="flex items-center justify-between gap-2 p-5 cursor-pointer"
+                onClick={onToggle}
+            >
+                <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                    {title}
+                    {selectedFilters[type]?.length > 0 && (
+                        <span className="bg-[#A7AA2E] text-white text-xs px-2 py-0.5 rounded-full">
+                            {selectedFilters[type].length}
+                        </span>
+                    )}
+                </label>
+                <button className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors">
+                    {isOpen ? <FiChevronUp size={16} /> : <FiChevronDown size={16} />}
+                </button>
+            </div>
+            <div className="overflow-hidden">
+                <AnimatePresence initial={false}>
+                    {isOpen && (
+                        <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ 
+                                height: "auto", 
+                                opacity: 1,
+                                transition: {
+                                    height: { duration: 0.2 },
+                                    opacity: { duration: 0.2, delay: 0.1 }
+                                }
+                            }}
+                            exit={{ 
+                                height: 0,
+                                opacity: 0,
+                                transition: {
+                                    height: { duration: 0.2 },
+                                    opacity: { duration: 0.1 }
+                                }
+                            }}
+                            className="origin-top"
+                        >
+                            <div className="px-5 pb-5">
+                                {getContent()}
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </div>
+        </div>
+    );
+};
+
+const MobileFiltersModal = ({
+    isOpen,
+    onClose,
+    filterSections,
+    setFilterSections,
+    selectedFilters,
+    handleFilterSelect,
+    filterData,
+    clearFilters
+}: MobileFiltersModalProps) => {
+    if (!isOpen) return null;
+
+    const totalFilters = Object.values(selectedFilters).reduce((acc, arr) => acc + arr.length, 0);
+
+    return (
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 z-50"
+        >
+            <motion.div
+                initial={{ x: '100%' }}
+                animate={{ x: 0 }}
+                exit={{ x: '100%' }}
+                className="absolute right-0 top-0 bottom-0 w-full max-w-[400px] bg-white"
+            >
+                <div className="flex items-center justify-between p-4 border-b">
+                    <h2 className="text-lg font-medium">Фільтри</h2>
+                    <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-lg">
+                        <FiX size={20} />
+                    </button>
+                </div>
+
+                <div className="overflow-y-auto h-[calc(100vh-180px)] p-4 space-y-4">
+                    {filterSections.map((section) => (
+                        <FilterSection
+                            key={section.id}
+                            title={section.title}
+                            isOpen={section.isOpen}
+                            onToggle={() => {
+                                setFilterSections(prev => 
+                                    prev.map(s => 
+                                        s.id === section.id 
+                                            ? { ...s, isOpen: !s.isOpen }
+                                            : s
+                                    )
+                                );
+                            }}
+                            type={section.id}
+                            selectedFilters={selectedFilters}
+                            handleFilterSelect={handleFilterSelect}
+                            filterData={filterData}
+                        />
+                    ))}
+                </div>
+
+                <div className="absolute bottom-0 left-0 right-0 p-4 border-t bg-white">
+                    <div className="flex gap-3">
+                        <button
+                            onClick={clearFilters}
+                            className="flex-1 px-6 py-3 border border-gray-200 rounded-xl"
+                        >
+                            Очистити
+                        </button>
+                        <button
+                            onClick={onClose}
+                            className="flex-1 px-6 py-3 bg-black text-white rounded-xl"
+                        >
+                            Показати {totalFilters > 0 ? `(${totalFilters})` : ''}
+                        </button>
+                    </div>
+                </div>
+            </motion.div>
+        </motion.div>
+    );
+};
+
 export default function CatalogPage() {
     const [viewType, setViewType] = useState<'grid' | 'list'>('grid');
     const [sortBy, setSortBy] = useState('popular');
@@ -192,6 +509,7 @@ export default function CatalogPage() {
         duration: [],
     });
     const [filteredProducts, setFilteredProducts] = useState(products);
+    const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
     
     // Функция фильтрации
     const applyFilters = useCallback(() => {
@@ -265,209 +583,6 @@ export default function CatalogPage() {
         );
     };
 
-    const PriceRangeFilter = ({ range, onChange }) => {
-        const [values, setValues] = useState(range.current);
-
-        const handleChange = (newValues: number[]) => {
-            setValues(newValues);
-            onChange?.(newValues);
-        };
-
-        return (
-            <div className="space-y-6">
-                {/* Range Slider */}
-                <div className="px-2">
-                    <Slider
-                        range
-                        min={range.min}
-                        max={range.max}
-                        value={values}
-                        onChange={handleChange}
-                        trackStyle={[{ backgroundColor: 'black' }]}
-                        handleStyle={[
-                            { 
-                                borderColor: 'black',
-                                backgroundColor: 'white',
-                                boxShadow: '0 0 0 2px black',
-                                opacity: 1
-                            },
-                            { 
-                                borderColor: 'black',
-                                backgroundColor: 'white',
-                                boxShadow: '0 0 0 2px black',
-                                opacity: 1
-                            }
-                        ]}
-                        railStyle={{ backgroundColor: '#E5E7EB' }}
-                    />
-                </div>
-
-                {/* Price Inputs */}
-                <div className="flex items-center gap-3">
-                    <div className="relative flex-1">
-                        <input 
-                            type="number"
-                            value={values[0]}
-                            onChange={(e) => handleChange([Number(e.target.value), values[1]])}
-                            className="w-full pl-3 pr-8 py-2 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-black focus:border-transparent"
-                        />
-                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">₴</span>
-                    </div>
-                    <span className="text-gray-400">—</span>
-                    <div className="relative flex-1">
-                        <input 
-                            type="number"
-                            value={values[1]}
-                            onChange={(e) => handleChange([values[0], Number(e.target.value)])}
-                            className="w-full pl-3 pr-8 py-2 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-black focus:border-transparent"
-                        />
-                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">₴</span>
-                    </div>
-                </div>
-
-                {/* Predefined Ranges */}
-                <div className="space-y-2">
-                    {range.ranges.map((item) => (
-                        <button
-                            key={item.id}
-                            onClick={() => {
-                                const [min, max] = item.id === 'under-500' 
-                                    ? [0, 500] 
-                                    : item.id === 'over-1500'
-                                        ? [1500, range.max]
-                                        : item.id.split('-').map(Number);
-                                handleChange([min, max]);
-                            }}
-                            className="w-full px-3 py-2 text-sm text-left rounded-xl transition-colors
-                                hover:bg-gray-100 flex items-center justify-between"
-                        >
-                            <span>{item.name}</span>
-                            <span className="text-gray-400 text-xs">{item.count}</span>
-                        </button>
-                    ))}
-                </div>
-            </div>
-        );
-    };
-
-    const FilterSection = ({ 
-        title, 
-        isOpen, 
-        onToggle, 
-        type 
-    }) => {
-        const getContent = () => {
-            if (type === 'price') {
-                return (
-                    <PriceRangeFilter 
-                        range={filterData.priceRange} 
-                        onChange={(values) => {
-                            console.log('Price range changed:', values);
-                        }} 
-                    />
-                );
-            }
-
-            // Get the correct data based on type
-            let filterItems;
-            switch(type) {
-                case 'status':
-                    filterItems = filterData.status;
-                    break;
-                case 'type':
-                    filterItems = filterData.type;
-                    break;
-                case 'players':
-                    filterItems = filterData.playerCount;
-                    break;
-                case 'age':
-                    filterItems = filterData.age;
-                    break;
-                case 'duration':
-                    filterItems = filterData.duration;
-                    break;
-                default:
-                    filterItems = [];
-            }
-
-            return (
-                <div className="flex flex-wrap gap-2">
-                    {filterItems.map((item) => {
-                        const isSelected = selectedFilters[type]?.includes(item.id);
-                        return (
-                            <button
-                                key={item.id}
-                                onClick={() => handleFilterSelect(type, item.id)}
-                                className={`px-4 py-2 text-sm font-medium rounded-xl transition-all duration-200
-                                    flex items-center gap-2 
-                                    ${isSelected 
-                                        ? 'bg-[#A7AA2E] text-white border-transparent shadow-md hover:bg-[#959827]' 
-                                        : 'border border-gray-200 hover:border-[#A7AA2E] hover:text-[#A7AA2E]'
-                                    }`}
-                            >
-                                <span>{item.name}</span>
-                                <span className={`text-xs ${isSelected ? 'text-white/80' : 'text-gray-400'}`}>
-                                    ({item.count})
-                                </span>
-                            </button>
-                        );
-                    })}
-                </div>
-            );
-        };
-
-        return (
-            <div className="group border border-gray-200/60 bg-gray-50/30 rounded-xl">
-                <div 
-                    className="flex items-center justify-between gap-2 p-5 cursor-pointer"
-                    onClick={onToggle}
-                >
-                    <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                        {title}
-                        {selectedFilters[type]?.length > 0 && (
-                            <span className="bg-[#A7AA2E] text-white text-xs px-2 py-0.5 rounded-full">
-                                {selectedFilters[type].length}
-                            </span>
-                        )}
-                    </label>
-                    <button className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors">
-                        {isOpen ? <FiChevronUp size={16} /> : <FiChevronDown size={16} />}
-                    </button>
-                </div>
-                <div className="overflow-hidden">
-                    <AnimatePresence initial={false}>
-                        {isOpen && (
-                            <motion.div
-                                initial={{ height: 0, opacity: 0 }}
-                                animate={{ 
-                                    height: "auto", 
-                                    opacity: 1,
-                                    transition: {
-                                        height: { duration: 0.2 },
-                                        opacity: { duration: 0.2, delay: 0.1 }
-                                    }
-                                }}
-                                exit={{ 
-                                    height: 0,
-                                    opacity: 0,
-                                    transition: {
-                                        height: { duration: 0.2 },
-                                        opacity: { duration: 0.1 }
-                                    }
-                                }}
-                                className="origin-top"
-                            >
-                                <div className="px-5 pb-5">
-                                    {getContent()}
-                                </div>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
-                </div>
-            </div>
-        );
-    };
-
     // Обновляем функцию очистки фильтров
     const clearFilters = () => {
         setSelectedFilters({
@@ -490,14 +605,29 @@ export default function CatalogPage() {
                     animate={{ opacity: 1, y: 0 }}
                     className="mb-8"
                 >
-                    <div className="text-sm text-gray-500 mb-4 hover:text-gray-700 transition-colors">
+                    <div className="text-sm text-gray-500 mb-4">
                         Головна / Каталог
                     </div>
-                    <div className="flex justify-between items-center">
-                        <h1 className="text-4xl font-bold bg-black bg-clip-text text-transparent">
+                    <div className="flex justify-between items-center flex-wrap gap-4">
+                        <h1 className="text-2xl sm:text-4xl font-bold">
                             Каталог ігор
                         </h1>
-                        <div className="flex gap-4 items-center">
+                        <div className="flex gap-2 sm:gap-4 items-center">
+                            {/* Mobile Filter Button */}
+                            <button
+                                onClick={() => setIsMobileFiltersOpen(true)}
+                                className="lg:hidden flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-xl"
+                            >
+                                <FiFilter size={20} />
+                                <span className="text-sm font-medium">Фільтри</span>
+                                {Object.values(selectedFilters).some(arr => arr.length > 0) && (
+                                    <span className="bg-black text-white text-xs px-2 py-0.5 rounded-full">
+                                        {Object.values(selectedFilters).reduce((acc, arr) => acc + arr.length, 0)}
+                                    </span>
+                                )}
+                            </button>
+
+                            {/* View Type and Sort Controls */}
                             <div className="flex items-center gap-2 bg-white p-2 rounded-xl shadow-sm border border-gray-100">
                                 <button 
                                     onClick={() => setViewType('grid')}
@@ -557,7 +687,7 @@ export default function CatalogPage() {
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: "100%" }}
                         transition={{ duration: 0.6, ease: "easeInOut" }}
-                        className="absolute left-[360px] top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-gray-200 to-transparent"
+                        className="hidden lg:block absolute left-[360px] top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-gray-200 to-transparent"
                     />
 
                     {/* Enhanced Filters */}
@@ -565,7 +695,7 @@ export default function CatalogPage() {
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.4 }}
-                        className="w-[340px] flex-shrink-0"
+                        className="hidden lg:block w-[340px] flex-shrink-0"
                     >
                         <div className="sticky top-24 space-y-3 pr-8">
                             <div className="space-y-3">
@@ -584,6 +714,9 @@ export default function CatalogPage() {
                                             );
                                         }}
                                         type={section.id}
+                                        selectedFilters={selectedFilters}
+                                        handleFilterSelect={handleFilterSelect}
+                                        filterData={filterData}
                                     />
                                 ))}
                             </div>
@@ -607,7 +740,7 @@ export default function CatalogPage() {
                     <motion.div 
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="flex-1 pl-8"
+                        className="flex-1 lg:pl-8" // Изменено: pl-8 только для десктопа
                     >
                         <div className={viewType === 'grid' 
                             ? `grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6 h-full`
@@ -775,6 +908,22 @@ export default function CatalogPage() {
                     </motion.div>
                 </div>
             </div>
+
+            {/* Mobile Filters Modal */}
+            <AnimatePresence>
+                {isMobileFiltersOpen && (
+                    <MobileFiltersModal
+                        isOpen={isMobileFiltersOpen}
+                        onClose={() => setIsMobileFiltersOpen(false)}
+                        filterSections={filterSections}
+                        setFilterSections={setFilterSections}
+                        selectedFilters={selectedFilters}
+                        handleFilterSelect={handleFilterSelect}
+                        filterData={filterData}
+                        clearFilters={clearFilters}
+                    />
+                )}
+            </AnimatePresence>
         </div>
     );
 }

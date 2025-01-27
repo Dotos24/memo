@@ -3,12 +3,14 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { FiShoppingCart, FiHeart, FiStar, FiCheckCircle, FiTruck, FiPackage, FiShield } from 'react-icons/fi';
+import { FiShoppingCart, FiHeart, FiStar, FiCheckCircle, FiTruck, FiPackage, FiShield, FiChevronUp, FiChevronDown } from 'react-icons/fi';
 import FAQWidget from '../FAQ/FAQWidget';
 import Reviews from '../Coments/Coments';
 
 const ProductPage = () => {
     const [isSticky, setIsSticky] = useState(false);
+    const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+    const [showMobileActions, setShowMobileActions] = useState(true);
     
     // Add variants data and state
     const variants = [
@@ -110,6 +112,9 @@ const ProductPage = () => {
     useEffect(() => {
         const handleScroll = () => {
             setIsSticky(window.scrollY > 100);
+            // Скрываем мобильные действия при скролле вниз
+            setShowMobileActions(window.scrollY < window.lastScrollY || window.scrollY < 100);
+            window.lastScrollY = window.scrollY;
         };
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
@@ -177,7 +182,7 @@ const ProductPage = () => {
     return (
         <>
             <div className="py-12 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
-                <div className="container mx-auto px-4">
+                <div className="container mx-auto px-4 pb-[80px] lg:pb-0">
                     {/* Breadcrumbs */}
                     <nav className="flex items-center space-x-2 text-sm mb-8 text-gray-500">
                         <span>Головна</span>
@@ -348,9 +353,9 @@ const ProductPage = () => {
                             <Reviews showAll={false} />
                         </div>
 
-                        {/* Right Column - Purchase Information - Updated */}
-                        <div className="lg:w-[35%] lg:border-l lg:pl-8"> {/* Changed width and padding */}
-                            <div className={`space-y-6 ${isSticky ? 'lg:sticky lg:top-24' : ''}`}> {/* Reduced spacing */}
+                        {/* Right Column - Desktop Purchase Information */}
+                        <div className="hidden lg:block lg:w-[35%] lg:border-l lg:pl-8">
+                            <div className={`space-y-6 ${isSticky ? 'lg:sticky lg:top-24' : ''}`}>
                                 <div>
                                     <h1 className="text-2xl font-bold mb-3 dark:text-white"> {/* Reduced text size */}
                                         {productInfo.title}
@@ -420,6 +425,78 @@ const ProductPage = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Mobile Bottom Sheet */}
+            <div className={`fixed bottom-0 left-0 right-0 lg:hidden z-[9999] transition-transform duration-300 ${showMobileActions ? 'translate-y-0' : 'translate-y-full'}`}>
+                <div className="bg-white dark:bg-gray-800 shadow-lg border-t border-gray-200 dark:border-gray-700">
+                    {/* Compact Version */}
+                    <div className="px-4 py-3 flex items-center justify-between">
+                        <div className="flex flex-col">
+                            <span className="text-2xl font-bold dark:text-white">{selectedVariant.price} ₴</span>
+                            {selectedVariant.oldPrice && (
+                                <span className="text-sm text-gray-500 line-through">{selectedVariant.oldPrice} ₴</span>
+                            )}
+                        </div>
+                        <div className="flex gap-2">
+                            <button
+                                onClick={() => setIsBottomSheetOpen(!isBottomSheetOpen)}
+                                className="p-2 rounded-lg border border-gray-200 dark:border-gray-700"
+                            >
+                                {isBottomSheetOpen ? <FiChevronDown /> : <FiChevronUp />}
+                            </button>
+                            <button className="px-6 py-2 bg-black text-white rounded-lg font-medium hover:bg-gray-900 transition-colors flex items-center gap-2 dark:bg-white dark:text-black">
+                                <FiShoppingCart className="w-5 h-5" />
+                                Купити
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Expanded Version */}
+                    <div className={`overflow-hidden transition-all duration-300 bg-gray-50 dark:bg-gray-900 ${
+                        isBottomSheetOpen ? 'max-h-[70vh] overflow-y-auto' : 'max-h-0'
+                    }`}>
+                        <div className="p-4 space-y-4">
+                            {/* Комплект */}
+                            <div className="bg-white dark:bg-gray-800 rounded-xl p-4">
+                                <span className="text-sm text-gray-500 dark:text-gray-400">🎮 Комплект включає:</span>
+                                <ul className="space-y-2 mt-2">
+                                    <li className="flex items-center gap-2 text-sm">
+                                        <FiCheckCircle className="text-green-500 flex-shrink-0" />
+                                        <span>🎴 150 унікальних карток</span>
+                                    </li>
+                                    <li className="flex items-center gap-2 text-sm">
+                                        <FiCheckCircle className="text-green-500 flex-shrink-0" />
+                                        <span>📖 Інструкція з правилами</span>
+                                    </li>
+                                    <li className="flex items-center gap-2 text-sm">
+                                        <FiCheckCircle className="text-green-500 flex-shrink-0" />
+                                        <span>🎀 Подарункова упаковка</span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            {/* Bundles */}
+                            <div className="space-y-4">
+                                {productInfo.bundles.map((bundle) => (
+                                    <BundleOffer key={bundle.id} bundle={bundle} />
+                                ))}
+                            </div>
+
+                            {/* Benefits */}
+                            <div className="grid grid-cols-3 gap-3">
+                                {productInfo.benefits.map((benefit, i) => (
+                                    <div key={i} className="text-center p-3 bg-white dark:bg-gray-800 rounded-xl">
+                                        <benefit.icon className="w-5 h-5 mx-auto mb-2 text-gray-600 dark:text-gray-400" />
+                                        <h3 className="text-xs font-medium mb-1 dark:text-white">{benefit.title}</h3>
+                                        <p className="text-[10px] text-gray-600 dark:text-gray-400">{benefit.text}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <FAQWidget />
         </>
     );

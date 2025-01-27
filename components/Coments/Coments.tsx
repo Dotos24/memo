@@ -126,34 +126,34 @@ export const Reviews = ({ showAll = false }: ReviewsProps) => {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="bg-gray-900/5 py-16"
+            className="py-8 sm:py-16"
         >
             <div className="container mx-auto px-4">
                 {/* Header - показываем только на странице продукта */}
                 {!showAll && (
-                    <div className="flex items-center justify-between mb-12">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0 mb-8 sm:mb-12">
                         <div>
-                            <h2 className="text-3xl font-bold mb-2">Відгуки покупців</h2>
+                            <h2 className="text-2xl sm:text-3xl font-bold mb-2">Відгуки покупців</h2>
                             <div className="flex items-center gap-2">
                                 <div className="flex">
                                     {[...Array(5)].map((_, i) => (
-                                        <FiStar key={i} className="w-5 h-5 text-yellow-400 fill-current" />
+                                        <FiStar key={i} className="w-4 sm:w-5 h-4 sm:h-5 text-yellow-400 fill-current" />
                                     ))}
                                 </div>
-                                <span className="text-lg font-medium">4.9</span>
-                                <span className="text-gray-500">(123 відгуки)</span>
+                                <span className="text-base sm:text-lg font-medium">4.9</span>
+                                <span className="text-sm sm:text-base text-gray-500">(123 відгуки)</span>
                             </div>
                         </div>
-                            <div className='flex gap-5'>
+                            <div className='flex flex-col sm:flex-row w-full sm:w-auto gap-3 sm:gap-5'>
                                 <button 
                                     onClick={() => router.push('/reviews')}
-                                    className="px-6 py-3 bg-black text-white rounded-xl hover:bg-gray-900 transition-all"
+                                    className="w-full sm:w-auto px-6 py-3 bg-black text-white rounded-xl hover:bg-gray-900 transition-all text-sm sm:text-base"
                                 >
                                     Перейти до всіх
                                 </button>
                             <button 
                                 onClick={() => setIsModalOpen(true)} 
-                                className="px-6 py-3 bg-[#A7AA2E] text-white rounded-xl hover:bg-gray-900 transition-all"
+                                className="w-full sm:w-auto px-6 py-3 bg-[#A7AA2E] text-white rounded-xl hover:bg-gray-900 transition-all text-sm sm:text-base"
                             >
                                 Написати відгук
                             </button>
@@ -162,10 +162,10 @@ export const Reviews = ({ showAll = false }: ReviewsProps) => {
                 )}
 
                 {/* Filters */}
-                <div className="flex gap-4 mb-8 overflow-x-auto pb-2">
+                <div className="flex gap-2 sm:gap-4 mb-6 sm:mb-8 overflow-x-auto scrollbar-hide pb-2">
                     <button
                         onClick={() => setSelectedTab('all')}
-                        className={`px-6 py-3 rounded-xl font-medium transition-all ${
+                        className={`px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl text-sm sm:text-base font-medium transition-all whitespace-nowrap ${
                             selectedTab === 'all' 
                                 ? 'bg-black text-white' 
                                 : 'bg-gray-100 hover:bg-gray-200'
@@ -175,31 +175,31 @@ export const Reviews = ({ showAll = false }: ReviewsProps) => {
                     </button>
                     <button
                         onClick={() => setSelectedTab('photo')}
-                        className={`px-6 py-3 rounded-xl font-medium transition-all flex items-center gap-2 ${
+                        className={`px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl text-sm sm:text-base font-medium transition-all flex items-center gap-2 whitespace-nowrap ${
                             selectedTab === 'photo' 
                                 ? 'bg-black text-white' 
                                 : 'bg-gray-100 hover:bg-gray-200'
                         }`}
                     >
-                        <FiImage className="w-5 h-5" />
+                        <FiImage className="w-4 sm:w-5 h-4 sm:h-5" />
                         З фото
                     </button>
                     <button
                         onClick={() => setSelectedTab('video')}
-                        className={`px-6 py-3 rounded-xl font-medium transition-all flex items-center gap-2 ${
+                        className={`px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl text-sm sm:text-base font-medium transition-all flex items-center gap-2 whitespace-nowrap ${
                             selectedTab === 'video' 
                                 ? 'bg-black text-white' 
                                 : 'bg-gray-100 hover:bg-gray-200'
                         }`}
                     >
-                        <FiVideo className="w-5 h-5" />
+                        <FiVideo className="w-4 sm:w-5 h-4 sm:h-5" />
                         З відео
                     </button>
                 </div>
 
                 {/* Updated Reviews Grid для горизонтального отображения */}
                 <motion.div 
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
                     initial={{ y: 30, opacity: 0 }}
                     whileInView={{ y: 0, opacity: 1 }}
                     viewport={{ once: true }}
@@ -211,11 +211,11 @@ export const Reviews = ({ showAll = false }: ReviewsProps) => {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ delay: index * 0.1 }}
-                            className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100"
+                            className="rounded-xl p-4 sm:p-6 border border-gray-100 h-full"
                         >
                             <div className="flex items-start justify-between mb-3">
-                                <div className="flex items-center gap-3">
-                                    <div className="relative w-10 h-10">
+                                <div className="flex items-center gap-2 sm:gap-3">
+                                    <div className="relative w-8 sm:w-10 h-8 sm:h-10">
                                         <Image
                                             src={review.avatar}
                                             alt={review.author}
@@ -223,19 +223,19 @@ export const Reviews = ({ showAll = false }: ReviewsProps) => {
                                             className="rounded-full object-cover"
                                         />
                                         {review.verified && (
-                                            <div className="absolute -right-1 -bottom-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center border-2 border-white">
-                                                <svg className="w-2 h-2 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <div className="absolute -right-1 -bottom-1 w-3 sm:w-4 h-3 sm:h-4 bg-green-500 rounded-full flex items-center justify-center border-2 border-white">
+                                                <svg className="w-1.5 sm:w-2 h-1.5 sm:h-2 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                                                 </svg>
                                             </div>
                                         )}
                                     </div>
                                     <div>
-                                        <h4 className="font-medium text-sm">{review.author}</h4>
-                                        <div className="flex items-center gap-1 text-xs text-gray-500">
+                                        <h4 className="font-medium text-xs sm:text-sm">{review.author}</h4>
+                                        <div className="flex items-center gap-1 text-[10px] sm:text-xs text-gray-500">
                                             <div className="flex">
                                                 {[...Array(review.rating)].map((_, i) => (
-                                                    <FiStar key={i} className="w-3 h-3 text-yellow-400 fill-current" />
+                                                    <FiStar key={i} className="w-2.5 sm:w-3 h-2.5 sm:h-3 text-yellow-400 fill-current" />
                                                 ))}
                                             </div>
                                             <span>•</span>
@@ -245,17 +245,17 @@ export const Reviews = ({ showAll = false }: ReviewsProps) => {
                                 </div>
                             </div>
 
-                            <p className="text-sm text-gray-600 dark:text-gray-300 mb-3 line-clamp-3">
+                            <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-3 line-clamp-3">
                                 {review.content}
                             </p>
 
                             {review.images && review.images.length > 0 && (
-                                <div className="flex gap-2 mb-4">
+                                <div className="flex gap-2 mb-4 overflow-x-auto pb-2">
                                     {review.images.map((image, index) => (
                                         <button
                                             key={index}
                                             onClick={() => setSelectedImage(image)}
-                                            className="relative w-20 h-20 rounded-lg overflow-hidden"
+                                            className="relative w-16 sm:w-20 h-16 sm:h-20 flex-shrink-0 rounded-lg overflow-hidden"
                                         >
                                             <Image
                                                 src={image}
@@ -268,10 +268,10 @@ export const Reviews = ({ showAll = false }: ReviewsProps) => {
                                 </div>
                             )}
 
-                            <div className="flex items-center justify-between text-xs text-gray-500">
+                            <div className="flex items-center justify-between text-[10px] sm:text-xs text-gray-500">
                                 <div className="flex items-center gap-1">
                                     <button className="hover:text-gray-700">
-                                        <FiStar className="w-3 h-3" />
+                                        <FiStar className="w-2.5 sm:w-3 h-2.5 sm:h-3" />
                                     </button>
                                     <span>{review.likes}</span>
                                 </div>

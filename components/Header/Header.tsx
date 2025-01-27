@@ -151,6 +151,148 @@ const SearchResult = ({ isVisible }: { isVisible: boolean }) => {
   )
 }
 
+const MobileMenu = ({ 
+  isOpen, 
+  onClose, 
+  menuItems,
+  pathname,
+  setIsCartOpen,
+  setIsFavoritesOpen 
+}: { 
+  isOpen: boolean; 
+  onClose: () => void;
+  menuItems: Array<{ id: string; title: string; href: string }>;
+  pathname: string;
+  setIsCartOpen: (value: boolean) => void;
+  setIsFavoritesOpen: (value: boolean) => void;
+}) => {
+  const menuVariants = {
+    closed: {
+      x: "100%",
+      transition: {
+        type: "spring",
+        stiffness: 400,
+        damping: 40
+      }
+    },
+    open: {
+      x: "0%",
+      transition: {
+        type: "spring",
+        stiffness: 400,
+        damping: 40
+      }
+    }
+  };
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          {/* Backdrop */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[9999]"
+          />
+          
+          {/* Menu Panel */}
+          <motion.div
+            initial="closed"
+            animate="open"
+            exit="closed"
+            variants={menuVariants}
+            className="fixed top-0 right-0 bottom-0 w-[85%] max-w-[400px] bg-white z-[99999] flex flex-col"
+          >
+            {/* Header */}
+            <div className="border-b p-4 flex items-center justify-between">
+              <span className="text-lg font-medium">Меню</span>
+              <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full">
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Menu Content */}
+            <div className="flex-1 overflow-y-auto p-4">
+              <nav className="space-y-6">
+                {/* Main Categories */}
+                <div className="space-y-2">
+                  <h3 className="text-sm font-semibold text-gray-400 uppercase">Каталог</h3>
+                  <div className="space-y-2">
+                    <Link href="/catalog" className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50">
+                      <span className="font-medium">Усі ігри</span>
+                      <svg className="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </Link>
+                    <Link href="/catalog" className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50">
+                      <span className="font-medium">Для розвитку</span>
+                      <svg className="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </Link>
+                  </div>
+                </div>
+
+                {/* Menu Items */}
+                <div className="space-y-2">
+                  <h3 className="text-sm font-semibold text-gray-400 uppercase">Навігація</h3>
+                  <div className="space-y-1">
+                    {menuItems.map((item) => (
+                      <Link
+                        key={item.id}
+                        href={item.href}
+                        className={`block px-3 py-2.5 rounded-xl text-[15px] font-medium ${
+                          pathname === item.href
+                            ? "bg-black text-white"
+                            : "text-gray-800 hover:bg-gray-50"
+                        }`}
+                      >
+                        {item.title}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Quick Actions */}
+                <div className="space-y-2">
+                  <h3 className="text-sm font-semibold text-gray-400 uppercase">Швидкі дії</h3>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      onClick={() => {
+                        setIsFavoritesOpen(true);
+                        onClose();
+                      }}
+                      className="flex items-center gap-2 p-3 rounded-xl hover:bg-gray-50"
+                    >
+                      <FiHeart className="w-5 h-5" />
+                      <span className="font-medium">Обране</span>
+                    </button>
+                    <button
+                      onClick={() => {
+                        setIsCartOpen(true);
+                        onClose();
+                      }}
+                      className="flex items-center gap-2 p-3 rounded-xl hover:bg-gray-50"
+                    >
+                      <FiShoppingCart className="w-5 h-5" />
+                      <span className="font-medium">Кошик</span>
+                    </button>
+                  </div>
+                </div>
+              </nav>
+            </div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
+  );
+};
+
 const Header = () => {
   const pathname = usePathname()
   const [searchValue, setSearchValue] = useState("")
@@ -159,6 +301,7 @@ const Header = () => {
   const [showResults, setShowResults] = useState(false)
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isFavoritesOpen, setIsFavoritesOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     if (searchValue.length >= 1) {
@@ -334,7 +477,10 @@ const Header = () => {
                 3
               </span>
             </button>
-            <button className="lg:hidden flex items-center justify-center w-11 h-11 hover:bg-gray-50 rounded-full">
+            <button 
+              onClick={() => setIsMobileMenuOpen(true)}
+              className="lg:hidden flex items-center justify-center w-11 h-11 hover:bg-gray-50 rounded-full"
+            >
               <FiMenu size={22} className="text-gray-700" />
             </button>
           </div>
@@ -342,6 +488,14 @@ const Header = () => {
       </div>
       <CartDropdown isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
       <FavoritesDropdown isOpen={isFavoritesOpen} onClose={() => setIsFavoritesOpen(false)} />
+      <MobileMenu 
+        isOpen={isMobileMenuOpen} 
+        onClose={() => setIsMobileMenuOpen(false)}
+        menuItems={menuItems}
+        pathname={pathname}
+        setIsCartOpen={setIsCartOpen}
+        setIsFavoritesOpen={setIsFavoritesOpen}
+      />
     </header>
   )
 }

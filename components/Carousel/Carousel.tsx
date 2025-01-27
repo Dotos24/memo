@@ -72,19 +72,19 @@ const Carousel = () => {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="pt-10 pb-16"
+            className="pt-6 sm:pt-10 pb-8 sm:pb-16"
         >
             <div className="container mx-auto px-4">
                 <div className="flex gap-4">
-                    {/* Main Carousel - Increased width */}
+                    {/* Main Carousel */}
                     <motion.div 
                         initial={{ x: -100, opacity: 0 }}
                         whileInView={{ x: 0, opacity: 1 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.6, delay: 0.2 }}
-                        className="relative flex-[2]"
+                        className="relative w-full lg:flex-[2]"
                     >
-                        <div className="overflow-hidden h-[700px] rounded-2xl" ref={emblaRef}>
+                        <div className="overflow-hidden h-[400px] sm:h-[500px] md:h-[600px] lg:h-[700px] rounded-2xl" ref={emblaRef}>
                             <div className="flex h-full">
                                 {images.map((image) => (
                                     <div 
@@ -106,16 +106,16 @@ const Carousel = () => {
 
                         <button
                             onClick={scrollPrev}
-                            className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/30 backdrop-blur-sm flex items-center justify-center hover:bg-white/50 transition-colors"
+                            className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-12 sm:h-12 rounded-full bg-white/30 backdrop-blur-sm flex items-center justify-center hover:bg-white/50 transition-colors"
                         >
-                            <FiChevronLeft size={24} className="text-white" />
+                            <FiChevronLeft size={20} className="text-white sm:text-2xl" />
                         </button>
 
                         <button
                             onClick={scrollNext}
-                            className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/30 backdrop-blur-sm flex items-center justify-center hover:bg-white/50 transition-colors"
+                            className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-12 sm:h-12 rounded-full bg-white/30 backdrop-blur-sm flex items-center justify-center hover:bg-white/50 transition-colors"
                         >
-                            <FiChevronRight size={24} className="text-white" />
+                            <FiChevronRight size={20} className="text-white sm:text-2xl" />
                         </button>
 
                         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
@@ -133,13 +133,13 @@ const Carousel = () => {
                         </div>
                     </motion.div>
 
-                    {/* Modified Product Card */}
+                    {/* Product Card - Hidden on mobile */}
                     <motion.div 
                         initial={{ x: 100, opacity: 0 }}
                         whileInView={{ x: 0, opacity: 1 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.6, delay: 0.4 }}
-                        className="flex-1"
+                        className="hidden lg:block flex-1"
                     >
                         <div className="h-[700px]">
                             {products.map((product) => (
