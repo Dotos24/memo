@@ -212,9 +212,11 @@ interface PriceRangeFilterProps {
 const PriceRangeFilter = ({ range, onChange }: PriceRangeFilterProps) => {
     const [values, setValues] = useState(range.current);
 
-    const handleChange = (newValues: number[]) => {
-        setValues(newValues);
-        onChange?.(newValues);
+    const handleChange = (newValues: number | number[]) => {
+        // Ensure we always work with an array of numbers
+        const valueArray = Array.isArray(newValues) ? newValues : [newValues, values[1]];
+        setValues(valueArray);
+        onChange?.(valueArray);
     };
 
     return (
