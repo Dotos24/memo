@@ -519,11 +519,13 @@ export default function CatalogPage() {
     ]);
 
     const toggleFilterSection = (sectionId: string) => {
-        setFilterSections(filterSections.map(section => 
-            section.id === sectionId 
-                ? { ...section, isOpen: !section.isOpen }
-                : section
-        ));
+        setFilterSections(prevSections => 
+            prevSections.map(section => 
+                section.id === sectionId 
+                    ? { ...section, isOpen: !section.isOpen }
+                    : section
+            )
+        );
     };
 
     const [selectedFilters, setSelectedFilters] = useState<{[key: string]: string[]}>({
