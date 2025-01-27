@@ -31,18 +31,6 @@ interface ReviewsProps {
     showAll?: boolean;
 }
 
-const commentVariants = {
-    hidden: { opacity: 0, scale: 0.95 },
-    visible: {
-        opacity: 1,
-        scale: 1,
-        transition: {
-            duration: 0.5,
-            ease: "easeOut"
-        }
-    }
-};
-
 export const Reviews = ({ showAll = false }: ReviewsProps) => {
     const [selectedTab, setSelectedTab] = useState<'all' | 'photo' | 'video'>('all');
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -208,9 +196,8 @@ export const Reviews = ({ showAll = false }: ReviewsProps) => {
                         <motion.div
                             key={review.id}
                             initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: index * 0.1 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5 }}
                             className="rounded-xl p-4 sm:p-6 border border-gray-100 h-full"
                         >
                             <div className="flex items-start justify-between mb-3">

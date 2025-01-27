@@ -1,5 +1,5 @@
 "use client"
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { FiFilter, FiGrid, FiList, FiChevronDown, FiHeart, FiShoppingCart, FiX, FiChevronUp } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -504,20 +504,26 @@ export default function CatalogPage() {
     const [viewType, setViewType] = useState<'grid' | 'list'>('grid');
     const [sortBy, setSortBy] = useState('popular');
     const [priceRange, setPriceRange] = useState({ min: 0, max: 2000 });
-    const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-    const [showFilters, setShowFilters] = useState(true);
-    const [selectedAvailability, setSelectedAvailability] = useState<string[]>([]);
-    const [selectedPlayerCount, setSelectedPlayerCount] = useState<string[]>([]);
-    const [activeFilters, setActiveFilters] = useState<string[]>([]);
     const [filterSections, setFilterSections] = useState<FilterSection[]>([
         { id: 'status', title: 'Статус', isOpen: true },
         { id: 'price', title: 'Цінова категорія', isOpen: true },
         { id: 'age', title: 'Вік', isOpen: true },
         { id: 'type', title: 'Тип гри', isOpen: false },
-        { id: 'players', title: 'Кількість гравців', isOpen: false },
-        { id: 'duration', title: 'Тривалість гри', isOpen: false },
+        { id: 'players', title: 'Кількість гравців', isOpen: false }
     ]);
-    const [showSort, setShowSort] = useState(false);
+
+    const handleSortChange = (value: string) => {
+        setSortBy(value);
+    };
+
+    const handleViewTypeChange = (type: 'grid' | 'list') => {
+        setViewType(type);
+    };
+
+    const handlePriceRangeChange = (values: number[]) => {
+        setPriceRange({ min: values[0], max: values[1] });
+    };
+
     const [selectedFilters, setSelectedFilters] = useState<{[key: string]: string[]}>({
         status: [],
         type: [],
@@ -529,7 +535,7 @@ export default function CatalogPage() {
     const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
     
     // Функция фильтрации
-    const applyFilters = useCallback(() => {
+    const applyFilters = () => {
         let result = [...products];
 
         // Фильтрация по статусу (в наличии/нет в наличии)
@@ -576,12 +582,12 @@ export default function CatalogPage() {
         }
 
         setFilteredProducts(result);
-    }, [selectedFilters, priceRange, sortBy, products]);
+    };
 
     // Применяем фильтры при изменении любого из параметров
     useEffect(() => {
         applyFilters();
-    }, [selectedFilters, priceRange, sortBy, applyFilters]);
+    }, [selectedFilters, priceRange, sortBy]);
 
     const handleFilterSelect = (type: string, id: string) => {
         setSelectedFilters(prev => ({
@@ -592,15 +598,6 @@ export default function CatalogPage() {
         }));
     };
 
-    const toggleCategory = (categoryId: string) => {
-        setSelectedCategories(prev => 
-            prev.includes(categoryId) 
-                ? prev.filter(id => id !== categoryId)
-                : [...prev, categoryId]
-        );
-    };
-
-    // Обновляем функцию очистки фильтров
     const clearFilters = () => {
         setSelectedFilters({
             status: [],
@@ -647,13 +644,13 @@ export default function CatalogPage() {
                             {/* View Type and Sort Controls */}
                             <div className="flex items-center gap-2 bg-white p-2 rounded-xl shadow-sm border border-gray-100">
                                 <button 
-                                    onClick={() => setViewType('grid')}
+                                    onClick={() => handleViewTypeChange('grid')}
                                     className={`p-2 rounded-lg transition-all ${viewType === 'grid' ? 'bg-black text-white' : 'hover:bg-gray-100'}`}
                                 >
                                     <FiGrid />
                                 </button>
                                 <button 
-                                    onClick={() => setViewType('list')}
+                                    onClick={() => handleViewTypeChange('list')}
                                     className={`p-2 rounded-lg transition-all ${viewType === 'list' ? 'bg-black text-white' : 'hover:bg-gray-100'}`}
                                 >
                                     <FiList />
@@ -662,37 +659,32 @@ export default function CatalogPage() {
                             <div className="relative group">
                                 <button 
                                     className="flex items-center gap-2 bg-white px-5 py-2 h-[50px] rounded-xl shadow-sm border border-gray-100 hover:border-gray-200 transition-all"
-                                    onClick={() => setShowSort(!showSort)}
+                                    onClick={() => {
+                                        const showSort = document.querySelector('.sort-dropdown');
+                                        if (showSort) {
+                                            showSort.classList.toggle('hidden');
+                                        }
+                                    }}
                                 >
                                     <span className="text-sm">Сортування</span>
-                                    <FiChevronDown className={`transition-transform ${showSort ? 'rotate-180' : ''}`} />
+                                    <FiChevronDown className={`transition-transform`} />
                                 </button>
                                 
                                 {/* Dropdown menu */}
-                                <AnimatePresence>
-                                    {showSort && (
-                                        <motion.div
-                                            initial={{ opacity: 0, y: 10 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            exit={{ opacity: 0, y: 10 }}
-                                            className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50"
+                                <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50 sort-dropdown hidden">
+                                    {sortOptions.map((option) => (
+                                        <button
+                                            key={option.value}
+                                            className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-50 transition-colors
+                                                ${sortBy === option.value ? 'font-medium text-black' : 'text-gray-600'}`}
+                                            onClick={() => {
+                                                handleSortChange(option.value);
+                                            }}
                                         >
-                                            {sortOptions.map((option) => (
-                                                <button
-                                                    key={option.value}
-                                                    className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-50 transition-colors
-                                                        ${sortBy === option.value ? 'font-medium text-black' : 'text-gray-600'}`}
-                                                    onClick={() => {
-                                                        setSortBy(option.value);
-                                                        setShowSort(false);
-                                                    }}
-                                                >
-                                                    {option.label}
-                                                </button>
-                                            ))}
-                                        </motion.div>
-                                    )}
-                                </AnimatePresence>
+                                            {option.label}
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     </div>

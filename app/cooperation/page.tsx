@@ -77,7 +77,7 @@ export default function CooperationPage() {
             className="flex items-center justify-center text-center"
           >
             <p className="text-sm md:text-base">
-              Отримайте <span className="font-semibold">знижку 20%</span> на перше корпоративне замовлення! 🎉
+              Отримайте <span className="font-semibold">знижку 20%</span> на перше корпоративне замовлення! &#x1F389;
             </p>
           </motion.div>
         </div>
@@ -108,7 +108,7 @@ export default function CooperationPage() {
                 className="text-center text-white max-w-3xl px-8 py-6 rounded-2xl "
               >
                 <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 drop-shadow-lg">
-                  Звʼяжіться з нами
+                  Зв&#39;яжіться з нами
                 </h1>
                 <p className="text-lg md:text-xl text-gray-100 drop-shadow-lg">
                   Ми відкриті до співпраці та нових партнерств
@@ -247,7 +247,7 @@ export default function CooperationPage() {
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
                       <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                        Ваше ім'я
+                        Ваше ім&#39;я
                       </label>
                       <input
                         type="text"
@@ -255,7 +255,7 @@ export default function CooperationPage() {
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-black focus:border-transparent"
-                        placeholder="Ваше ім'я"
+                        placeholder="Ваше ім&#39;я"
                       />
                     </div>
 

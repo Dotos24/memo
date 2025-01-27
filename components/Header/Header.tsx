@@ -382,8 +382,11 @@ const Header = () => {
                           <ListItem key="menu-couples" href="/catalog" title="Парам">
                             Ігри для романтичного вечора вдвох
                           </ListItem>
-                          <ListItem key="menu-family" href="/catalog" title="Сім'ї">
+                          <ListItem key="menu-family" href="/catalog" title="Сім&apos;ї">
                             Сімейні ігри для всіх вікових категорій
+                          </ListItem>
+                          <ListItem key="menu-development" href="/catalog" title="Розвиваючі">
+                            Ігри для розвитку пам&apos;яті та мислення
                           </ListItem>
                         </ul>
                       </NavigationMenuContent>
@@ -396,7 +399,7 @@ const Header = () => {
                             Індивідуальні розвиваючі ігри
                           </ListItem>
                           <ListItem key="menu-development" href="/catalog" title="Розвиваючі">
-                            Ігри для розвитку пам'яті та мислення
+                            Ігри для розвитку пам&apos;яті та мислення
                           </ListItem>
                           <ListItem key="menu-conversation" href="/catalog" title="Розмовні ігри">
                             Ігри для покращення комунікації
