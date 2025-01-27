@@ -295,6 +295,12 @@ const PriceRangeFilter = ({ range, onChange }: PriceRangeFilterProps) => {
     );
 };
 
+interface FilterItem {
+    id: string;
+    name: string;
+    count: number;
+}
+
 const FilterSection = ({ 
     title, 
     isOpen, 
@@ -324,8 +330,8 @@ const FilterSection = ({
             );
         }
 
-        // Get the correct data based on type
-        let filterItems;
+        // Get the correct data based on type with proper typing
+        let filterItems: FilterItem[] = [];
         switch(type) {
             case 'status':
                 filterItems = filterData.status;
@@ -342,8 +348,6 @@ const FilterSection = ({
             case 'duration':
                 filterItems = filterData.duration;
                 break;
-            default:
-                filterItems = [];
         }
 
         return (
