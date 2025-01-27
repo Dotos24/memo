@@ -518,12 +518,12 @@ export default function CatalogPage() {
         { id: 'players', title: 'Кількість гравців', isOpen: false }
     ]);
 
-    const handleSortChange = (value: string) => {
-        setSortBy(value);
-    };
-
-    const handleViewTypeChange = (type: 'grid' | 'list') => {
-        setViewType(type);
+    const toggleFilterSection = (sectionId: string) => {
+        setFilterSections(filterSections.map(section => 
+            section.id === sectionId 
+                ? { ...section, isOpen: !section.isOpen }
+                : section
+        ));
     };
 
     const [selectedFilters, setSelectedFilters] = useState<{[key: string]: string[]}>({
@@ -646,13 +646,13 @@ export default function CatalogPage() {
                             {/* View Type and Sort Controls */}
                             <div className="flex items-center gap-2 bg-white p-2 rounded-xl shadow-sm border border-gray-100">
                                 <button 
-                                    onClick={() => handleViewTypeChange('grid')}
+                                    onClick={() => setViewType('grid')}
                                     className={`p-2 rounded-lg transition-all ${viewType === 'grid' ? 'bg-black text-white' : 'hover:bg-gray-100'}`}
                                 >
                                     <FiGrid />
                                 </button>
                                 <button 
-                                    onClick={() => handleViewTypeChange('list')}
+                                    onClick={() => setViewType('list')}
                                     className={`p-2 rounded-lg transition-all ${viewType === 'list' ? 'bg-black text-white' : 'hover:bg-gray-100'}`}
                                 >
                                     <FiList />
@@ -680,7 +680,7 @@ export default function CatalogPage() {
                                             className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-50 transition-colors
                                                 ${sortBy === option.value ? 'font-medium text-black' : 'text-gray-600'}`}
                                             onClick={() => {
-                                                handleSortChange(option.value);
+                                                setSortBy(option.value);
                                             }}
                                         >
                                             {option.label}
@@ -715,15 +715,7 @@ export default function CatalogPage() {
                                         key={section.id}
                                         title={section.title}
                                         isOpen={section.isOpen}
-                                        onToggle={() => {
-                                            setFilterSections(prev => 
-                                                prev.map(s => 
-                                                    s.id === section.id 
-                                                        ? { ...s, isOpen: !s.isOpen }
-                                                        : s
-                                                )
-                                            );
-                                        }}
+                                        onToggle={() => toggleFilterSection(section.id)}
                                         type={section.id}
                                         selectedFilters={selectedFilters}
                                         handleFilterSelect={handleFilterSelect}
