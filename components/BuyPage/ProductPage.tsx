@@ -7,6 +7,13 @@ import { FiShoppingCart, FiHeart, FiStar, FiCheckCircle, FiTruck, FiPackage, FiS
 import FAQWidget from '../FAQ/FAQWidget';
 import Reviews from '../Coments/Coments';
 
+// Add type declaration for window.lastScrollY
+declare global {
+    interface Window {
+        lastScrollY: number;
+    }
+}
+
 const ProductPage = () => {
     const [isSticky, setIsSticky] = useState(false);
     const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
@@ -110,6 +117,9 @@ const ProductPage = () => {
     const [selectedImage, setSelectedImage] = useState(productImages[0].url);
 
     useEffect(() => {
+        // Initialize lastScrollY
+        window.lastScrollY = window.scrollY;
+        
         const handleScroll = () => {
             setIsSticky(window.scrollY > 100);
             // Скрываем мобильные действия при скролле вниз
