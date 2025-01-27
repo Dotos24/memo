@@ -469,7 +469,7 @@ const MobileFiltersModal = ({
                             title={section.title}
                             isOpen={section.isOpen}
                             onToggle={() => {
-                                setFilterSections(prev => 
+                                setFilterSections((prev: FilterSection[]) => 
                                     prev.map(s => 
                                         s.id === section.id 
                                             ? { ...s, isOpen: !s.isOpen }
